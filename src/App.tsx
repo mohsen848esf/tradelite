@@ -1,11 +1,15 @@
+import { useState } from 'react'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { Header } from '@/components/layout/Header'
 import { SidebarPanel } from '@/components/layout/SidebarPanel'
 import { StatusBar } from '@/components/layout/StatusBar'
+import { SymbolSelector } from '@/components/market/SymbolSelector'
 import { DEFAULT_SYMBOL } from '@/constants/market'
 import './App.css'
 
 function App() {
+  const [symbol, setSymbol] = useState(DEFAULT_SYMBOL)
+
   return (
     <AppLayout
       header={
@@ -16,7 +20,7 @@ function App() {
       sidebar={
         <>
           <SidebarPanel title="Markets">
-            <p className="placeholder-text">Symbol selector coming soon</p>
+            <SymbolSelector value={symbol} onChange={setSymbol} />
           </SidebarPanel>
           <SidebarPanel title="Price Alerts">
             <p className="placeholder-text">No alerts yet</p>
@@ -24,11 +28,11 @@ function App() {
         </>
       }
       footer={
-        <StatusBar symbol={DEFAULT_SYMBOL} status="disconnected" />
+        <StatusBar symbol={symbol} status="disconnected" />
       }
     >
       <div className="chart-placeholder">
-        <p>Candlestick chart will appear here</p>
+        <p>Candlestick chart for {symbol} will appear here</p>
       </div>
     </AppLayout>
   )

@@ -1,0 +1,40 @@
+.symbol-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.symbol-selector__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0.625rem 0.75rem;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  color: #e6edf3;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.symbol-selector__item:hover {
+  background: #21262d;
+}
+
+.symbol-selector__item--active {
+  background: #1f2d3d;
+  border-color: #388bfd;
+}
+
+.symbol-selector__label {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.symbol-selector__symbol {
+  font-size: 0.75rem;
+  color: #8b949e;
+  font-variant-numeric: tabular-nums;
+}
