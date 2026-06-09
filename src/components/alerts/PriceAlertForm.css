@@ -1,0 +1,52 @@
+.price-alert-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.price-alert-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+  color: #8b949e;
+}
+
+.price-alert-form__field input,
+.price-alert-form__field select {
+  padding: 0.5rem 0.625rem;
+  border: 1px solid #30363d;
+  border-radius: 6px;
+  background: #0d1117;
+  color: #e6edf3;
+  font-size: 0.875rem;
+}
+
+.price-alert-form__submit,
+.price-alert-form__notify {
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  font-size: 0.8125rem;
+  cursor: pointer;
+}
+
+.price-alert-form__submit {
+  background: #238636;
+  color: #ffffff;
+}
+
+.price-alert-form__submit:hover {
+  background: #2ea043;
+}
+
+.price-alert-form__notify {
+  background: transparent;
+  border-color: #30363d;
+  color: #8b949e;
+}
+
+.price-alert-form__notify:hover {
+  border-color: #58a6ff;
+  color: #58a6ff;
+}

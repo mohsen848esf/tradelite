@@ -3,15 +3,25 @@ import { AppLayout } from '@/components/layout/AppLayout'
 import { Header } from '@/components/layout/Header'
 import { SidebarPanel } from '@/components/layout/SidebarPanel'
 import { StatusBar } from '@/components/layout/StatusBar'
+import { PriceAlertForm } from '@/components/alerts/PriceAlertForm'
+import { PriceAlertList } from '@/components/alerts/PriceAlertList'
 import { CandlestickChart } from '@/components/chart/CandlestickChart'
 import { SymbolSelector } from '@/components/market/SymbolSelector'
 import { DEFAULT_SYMBOL } from '@/constants/market'
 import { useKlineStream } from '@/hooks/useKlineStream'
+import { usePriceAlerts } from '@/hooks/usePriceAlerts'
 import './App.css'
 
 function App() {
   const [symbol, setSymbol] = useState(DEFAULT_SYMBOL)
   const { kline, lastPrice, status, error } = useKlineStream({ symbol })
+  const {
+    alerts,
+    addAlert,
+    removeAlert,
+    clearTriggered,
+    requestNotificationPermission,
+  } = usePriceAlerts(lastPrice, symbol)
 
   return (
     <AppLayout
@@ -26,7 +36,17 @@ function App() {
             <SymbolSelector value={symbol} onChange={setSymbol} />
           </SidebarPanel>
           <SidebarPanel title="Price Alerts">
-            <p className="placeholder-text">No alerts yet</p>
+            <PriceAlertForm
+              symbol={symbol}
+              onSubmit={addAlert}
+              onRequestNotifications={() => void requestNotificationPermission()}
+            />
+            <PriceAlertList
+              alerts={alerts}
+              symbol={symbol}
+              onRemove={removeAlert}
+              onClearTriggered={clearTriggered}
+            />
           </SidebarPanel>
         </>
       }
