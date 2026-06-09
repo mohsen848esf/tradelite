@@ -1,0 +1,30 @@
+.candlestick-chart {
+  position: relative;
+  width: 100%;
+  min-height: 420px;
+  border: 1px solid #21262d;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #161b22;
+}
+
+.candlestick-chart__canvas {
+  width: 100%;
+  height: 420px;
+}
+
+.candlestick-chart__overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(13, 17, 23, 0.72);
+  color: #8b949e;
+  font-size: 0.875rem;
+  pointer-events: none;
+}
+
+.candlestick-chart__overlay--error {
+  color: #f85149;
+}

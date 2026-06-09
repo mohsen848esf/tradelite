@@ -3,6 +3,7 @@ import { AppLayout } from '@/components/layout/AppLayout'
 import { Header } from '@/components/layout/Header'
 import { SidebarPanel } from '@/components/layout/SidebarPanel'
 import { StatusBar } from '@/components/layout/StatusBar'
+import { CandlestickChart } from '@/components/chart/CandlestickChart'
 import { SymbolSelector } from '@/components/market/SymbolSelector'
 import { DEFAULT_SYMBOL } from '@/constants/market'
 import { useKlineStream } from '@/hooks/useKlineStream'
@@ -10,7 +11,7 @@ import './App.css'
 
 function App() {
   const [symbol, setSymbol] = useState(DEFAULT_SYMBOL)
-  const { lastPrice, status, error } = useKlineStream({ symbol })
+  const { kline, lastPrice, status, error } = useKlineStream({ symbol })
 
   return (
     <AppLayout
@@ -33,10 +34,8 @@ function App() {
         <StatusBar symbol={symbol} status={status} lastPrice={lastPrice ?? undefined} />
       }
     >
-      <div className="chart-placeholder">
-        <p>Candlestick chart for {symbol} will appear here</p>
-        {error && <p className="chart-placeholder__error">{error}</p>}
-      </div>
+      <CandlestickChart symbol={symbol} kline={kline} />
+      {error && <p className="stream-error">{error}</p>}
     </AppLayout>
   )
 }
