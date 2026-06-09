@@ -1,0 +1,41 @@
+.status-bar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.status-bar__symbol {
+  font-weight: 600;
+  color: #e6edf3;
+}
+
+.status-bar__badge {
+  padding: 0.125rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.status-bar__badge--connecting {
+  background: #3d2e00;
+  color: #f0c14b;
+}
+
+.status-bar__badge--connected {
+  background: #0f2d1f;
+  color: #3fb950;
+}
+
+.status-bar__badge--disconnected,
+.status-bar__badge--error {
+  background: #3d1418;
+  color: #f85149;
+}
+
+.status-bar__price {
+  margin-left: auto;
+  font-variant-numeric: tabular-nums;
+  color: #58a6ff;
+}
