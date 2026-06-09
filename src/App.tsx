@@ -5,10 +5,12 @@ import { SidebarPanel } from '@/components/layout/SidebarPanel'
 import { StatusBar } from '@/components/layout/StatusBar'
 import { SymbolSelector } from '@/components/market/SymbolSelector'
 import { DEFAULT_SYMBOL } from '@/constants/market'
+import { useKlineStream } from '@/hooks/useKlineStream'
 import './App.css'
 
 function App() {
   const [symbol, setSymbol] = useState(DEFAULT_SYMBOL)
+  const { lastPrice, status, error } = useKlineStream({ symbol })
 
   return (
     <AppLayout
@@ -28,11 +30,12 @@ function App() {
         </>
       }
       footer={
-        <StatusBar symbol={symbol} status="disconnected" />
+        <StatusBar symbol={symbol} status={status} lastPrice={lastPrice ?? undefined} />
       }
     >
       <div className="chart-placeholder">
         <p>Candlestick chart for {symbol} will appear here</p>
+        {error && <p className="chart-placeholder__error">{error}</p>}
       </div>
     </AppLayout>
   )
