@@ -7,7 +7,7 @@ type ChartHeaderProps = {
 }
 
 export function ChartHeader({ symbol, interval }: ChartHeaderProps) {
-  const label = SYMBOLS.find((pair) => pair.symbol === symbol)?.label ?? symbol
+  const label = getSymbolLabel(symbol)
 
   return (
     <div className="chart-header">
