@@ -14,6 +14,15 @@ export const SYMBOLS: SymbolPair[] = [
 
 export const KLINE_INTERVAL = '1m'
 
+export const KLINE_INTERVALS = [
+  { value: '1m', label: '1m' },
+  { value: '5m', label: '5m' },
+  { value: '15m', label: '15m' },
+  { value: '1h', label: '1h' },
+] as const
+
+export type KlineInterval = (typeof KLINE_INTERVALS)[number]['value']
+
 export function getKlineStreamUrl(symbol: string, interval = KLINE_INTERVAL): string {
   const stream = `${symbol.toLowerCase()}@kline_${interval}`
   return `${BINANCE_WS_BASE}/${stream}`
