@@ -13,6 +13,7 @@ import './CandlestickChart.css'
 
 type CandlestickChartProps = {
   symbol: string
+  interval: string
   kline: Kline | null
 }
 
@@ -26,7 +27,7 @@ function toChartCandle(kline: Kline) {
   }
 }
 
-export function CandlestickChart({ symbol, kline }: CandlestickChartProps) {
+export function CandlestickChart({ symbol, interval, kline }: CandlestickChartProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const chartRef = useRef<IChartApi | null>(null)
   const seriesRef = useRef<ISeriesApi<'Candlestick'> | null>(null)
@@ -106,7 +107,7 @@ export function CandlestickChart({ symbol, kline }: CandlestickChartProps) {
       setError(null)
 
       try {
-        const history = await fetchHistoricalKlines(symbol)
+        const history = await fetchHistoricalKlines(symbol, interval)
         if (cancelled || !seriesRef.current) {
           return
         }
@@ -129,7 +130,7 @@ export function CandlestickChart({ symbol, kline }: CandlestickChartProps) {
     return () => {
       cancelled = true
     }
-  }, [symbol])
+  }, [symbol, interval])
 
   useEffect(() => {
     const series = seriesRef.current
