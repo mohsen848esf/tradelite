@@ -5,6 +5,7 @@ import { SidebarPanel } from '@/components/layout/SidebarPanel'
 import { StatusBar } from '@/components/layout/StatusBar'
 import { PriceAlertForm } from '@/components/alerts/PriceAlertForm'
 import { PriceAlertList } from '@/components/alerts/PriceAlertList'
+import { ChartHeader } from '@/components/chart/ChartHeader'
 import { CandlestickChart } from '@/components/chart/CandlestickChart'
 import { IntervalSelector } from '@/components/market/IntervalSelector'
 import { StreamErrorBanner } from '@/components/market/StreamErrorBanner'
@@ -68,6 +69,7 @@ function App() {
         />
       }
     >
+      <ChartHeader symbol={symbol} interval={interval} />
       <CandlestickChart symbol={symbol} interval={interval} kline={kline} />
       {error && <StreamErrorBanner message={error} onRetry={reconnect} />}
     </AppLayout>
