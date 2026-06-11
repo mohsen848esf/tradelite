@@ -12,6 +12,7 @@ import { SymbolSelector } from '@/components/market/SymbolSelector'
 import { DEFAULT_SYMBOL, KLINE_INTERVAL, type KlineInterval } from '@/constants/market'
 import { STORAGE_KEYS } from '@/constants/storage'
 import { useKlineStream } from '@/hooks/useKlineStream'
+import { useTicker24h } from '@/hooks/useTicker24h'
 import { usePriceAlerts } from '@/hooks/usePriceAlerts'
 import './App.css'
 
@@ -26,6 +27,7 @@ function App() {
     clearTriggered,
     requestNotificationPermission,
   } = usePriceAlerts(lastPrice, symbol)
+  const ticker = useTicker24h(symbol)
 
   return (
     <AppLayout
@@ -58,7 +60,12 @@ function App() {
         </>
       }
       footer={
-        <StatusBar symbol={symbol} status={status} lastPrice={lastPrice ?? undefined} />
+        <StatusBar
+          symbol={symbol}
+          status={status}
+          lastPrice={lastPrice ?? undefined}
+          priceChangePercent={ticker?.priceChangePercent}
+        />
       }
     >
       <CandlestickChart symbol={symbol} interval={interval} kline={kline} />

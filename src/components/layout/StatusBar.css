@@ -34,6 +34,19 @@
   color: #f85149;
 }
 
+.status-bar__change {
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.status-bar__change--up {
+  color: #3fb950;
+}
+
+.status-bar__change--down {
+  color: #f85149;
+}
+
 .status-bar__price {
   margin-left: auto;
   font-variant-numeric: tabular-nums;
