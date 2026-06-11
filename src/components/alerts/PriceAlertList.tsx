@@ -36,7 +36,7 @@ export function PriceAlertList({ alerts, symbol, onRemove, onClearTriggered }: P
                 {alert.direction === 'above' ? '↑ Above' : '↓ Below'}
               </span>
               <span className="price-alert-list__price">
-                ${alert.targetPrice.toLocaleString(undefined, { maximumFractionDigits: 8 })}
+                {formatUsdPrice(alert.targetPrice, 8)}
               </span>
             </div>
             <button

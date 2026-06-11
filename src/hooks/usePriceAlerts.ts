@@ -77,7 +77,7 @@ export function usePriceAlerts(currentPrice: number | null, symbol: string) {
 
         if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
           new Notification('Tradelite Price Alert', {
-            body: `${alert.symbol} is ${alert.direction} $${alert.targetPrice.toLocaleString()}`,
+            body: `${alert.symbol} is ${alert.direction} ${formatUsdPrice(alert.targetPrice)}`,
           })
         }
 

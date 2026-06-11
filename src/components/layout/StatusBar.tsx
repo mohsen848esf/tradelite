@@ -24,7 +24,7 @@ export function StatusBar({ symbol, status, lastPrice }: StatusBarProps) {
       </span>
       {lastPrice !== undefined && (
         <span className="status-bar__price">
-          ${lastPrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+          {formatUsdPrice(lastPrice)}
         </span>
       )}
     </div>
