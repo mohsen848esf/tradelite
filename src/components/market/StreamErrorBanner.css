@@ -1,0 +1,28 @@
+.stream-error-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 0.75rem;
+  padding: 0.625rem 0.875rem;
+  border: 1px solid #f85149;
+  border-radius: 6px;
+  background: #3d1418;
+  color: #f85149;
+  font-size: 0.875rem;
+}
+
+.stream-error-banner button {
+  padding: 0.25rem 0.625rem;
+  border: 1px solid #f85149;
+  border-radius: 4px;
+  background: transparent;
+  color: #f85149;
+  font-size: 0.8125rem;
+  cursor: pointer;
+}
+
+.stream-error-banner button:hover {
+  background: #f85149;
+  color: #0d1117;
+}
