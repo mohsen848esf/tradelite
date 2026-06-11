@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import type { PriceAlert } from '@/types/market'
+import { formatUsdPrice } from '@/utils/formatPrice'
 
 const STORAGE_KEY = 'tradelite-price-alerts'
 

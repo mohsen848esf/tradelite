@@ -1,4 +1,5 @@
 import type { PriceAlert } from '@/types/market'
+import { formatUsdPrice } from '@/utils/formatPrice'
 import './PriceAlertList.css'
 
 type PriceAlertListProps = {
