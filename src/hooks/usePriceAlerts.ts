@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useState } from 'react'
+import { STORAGE_KEYS } from '@/constants/storage'
 import type { PriceAlert } from '@/types/market'
 import { formatUsdPrice } from '@/utils/formatPrice'
 
-const STORAGE_KEY = 'tradelite-price-alerts'
+const STORAGE_KEY = STORAGE_KEYS.priceAlerts
 
 function loadAlerts(): PriceAlert[] {
   try {
