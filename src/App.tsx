@@ -7,6 +7,7 @@ import { PriceAlertForm } from '@/components/alerts/PriceAlertForm'
 import { PriceAlertList } from '@/components/alerts/PriceAlertList'
 import { CandlestickChart } from '@/components/chart/CandlestickChart'
 import { IntervalSelector } from '@/components/market/IntervalSelector'
+import { StreamErrorBanner } from '@/components/market/StreamErrorBanner'
 import { SymbolSelector } from '@/components/market/SymbolSelector'
 import { DEFAULT_SYMBOL, KLINE_INTERVAL, type KlineInterval } from '@/constants/market'
 import { STORAGE_KEYS } from '@/constants/storage'
@@ -17,7 +18,7 @@ import './App.css'
 function App() {
   const [symbol, setSymbol] = usePersistedState(STORAGE_KEYS.selectedSymbol, DEFAULT_SYMBOL)
   const [interval, setInterval] = usePersistedState<KlineInterval>(STORAGE_KEYS.chartInterval, KLINE_INTERVAL)
-  const { kline, lastPrice, status, error } = useKlineStream({ symbol, interval })
+  const { kline, lastPrice, status, error, reconnect } = useKlineStream({ symbol, interval })
   const {
     alerts,
     addAlert,
@@ -61,7 +62,7 @@ function App() {
       }
     >
       <CandlestickChart symbol={symbol} interval={interval} kline={kline} />
-      {error && <p className="stream-error">{error}</p>}
+      {error && <StreamErrorBanner message={error} onRetry={reconnect} />}
     </AppLayout>
   )
 }
