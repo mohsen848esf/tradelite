@@ -1,15 +1,10 @@
-export function formatPrice(
-  value: number,
-  options: { minimumFractionDigits?: number; maximumFractionDigits?: number } = {},
-): string {
-  const { minimumFractionDigits = 2, maximumFractionDigits = 8 } = options
-
+export function formatPrice(value: number, maximumFractionDigits = 2): string {
   return value.toLocaleString(undefined, {
-    minimumFractionDigits,
+    minimumFractionDigits: 2,
     maximumFractionDigits,
   })
 }
 
-export function formatUsd(value: number): string {
-  return `$${formatPrice(value)}`
+export function formatUsdPrice(value: number, maximumFractionDigits = 2): string {
+  return `$${formatPrice(value, maximumFractionDigits)}`
 }
