@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { usePersistedState } from '@/hooks/usePersistedState'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { Header } from '@/components/layout/Header'
 import { SidebarPanel } from '@/components/layout/SidebarPanel'
@@ -8,12 +8,13 @@ import { PriceAlertList } from '@/components/alerts/PriceAlertList'
 import { CandlestickChart } from '@/components/chart/CandlestickChart'
 import { SymbolSelector } from '@/components/market/SymbolSelector'
 import { DEFAULT_SYMBOL } from '@/constants/market'
+import { STORAGE_KEYS } from '@/constants/storage'
 import { useKlineStream } from '@/hooks/useKlineStream'
 import { usePriceAlerts } from '@/hooks/usePriceAlerts'
 import './App.css'
 
 function App() {
-  const [symbol, setSymbol] = useState(DEFAULT_SYMBOL)
+  const [symbol, setSymbol] = usePersistedState(STORAGE_KEYS.selectedSymbol, DEFAULT_SYMBOL)
   const { kline, lastPrice, status, error } = useKlineStream({ symbol })
   const {
     alerts,
