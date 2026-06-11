@@ -1,4 +1,5 @@
 import type { ConnectionStatus } from '@/types/market'
+import { formatUsdPrice } from '@/utils/formatPrice'
 import './StatusBar.css'
 
 type StatusBarProps = {
