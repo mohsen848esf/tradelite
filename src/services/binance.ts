@@ -41,6 +41,33 @@ function mapRestKline(entry: BinanceRestKline): Kline {
   }
 }
 
+export type Ticker24h = {
+  symbol: string
+  priceChangePercent: number
+  lastPrice: number
+}
+
+export async function fetchTicker24h(symbol: string): Promise<Ticker24h> {
+  const params = new URLSearchParams({ symbol })
+  const response = await fetch(`${BINANCE_REST_BASE}/ticker/24hr?${params.toString()}`)
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch 24h ticker for ${symbol}`)
+  }
+
+  const data = (await response.json()) as {
+    symbol: string
+    priceChangePercent: string
+    lastPrice: string
+  }
+
+  return {
+    symbol: data.symbol,
+    priceChangePercent: Number(data.priceChangePercent),
+    lastPrice: Number(data.lastPrice),
+  }
+}
+
 export async function fetchHistoricalKlines(
   symbol: string,
   interval = KLINE_INTERVAL,
