@@ -51,4 +51,13 @@
   margin-left: auto;
   font-variant-numeric: tabular-nums;
   color: #58a6ff;
+  transition: color 0.15s ease-out;
+}
+
+.status-bar__price--up {
+  color: #3fb950;
+}
+
+.status-bar__price--down {
+  color: #f85149;
 }

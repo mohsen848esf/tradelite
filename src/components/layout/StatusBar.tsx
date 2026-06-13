@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react'
 import type { ConnectionStatus } from '@/types/market'
 import { formatUsdPrice } from '@/utils/formatPrice'
 import './StatusBar.css'
@@ -17,6 +18,30 @@ const STATUS_LABELS: Record<ConnectionStatus, string> = {
 }
 
 export function StatusBar({ symbol, status, lastPrice, priceChangePercent }: StatusBarProps) {
+  const [direction, setDirection] = useState<'up' | 'down' | null>(null)
+  const prevPriceRef = useRef<number | undefined>(lastPrice)
+
+  useEffect(() => {
+    if (lastPrice === undefined || prevPriceRef.current === undefined) {
+      prevPriceRef.current = lastPrice
+      return
+    }
+
+    if (lastPrice > prevPriceRef.current) {
+      setDirection('up')
+    } else if (lastPrice < prevPriceRef.current) {
+      setDirection('down')
+    }
+
+    prevPriceRef.current = lastPrice
+
+    const timer = setTimeout(() => {
+      setDirection(null)
+    }, 300)
+
+    return () => clearTimeout(timer)
+  }, [lastPrice])
+
   return (
     <div className="status-bar">
       <span className="status-bar__symbol">{symbol}</span>
@@ -32,7 +57,7 @@ export function StatusBar({ symbol, status, lastPrice, priceChangePercent }: Sta
         </span>
       )}
       {lastPrice !== undefined && (
-        <span className="status-bar__price">
+        <span className={`status-bar__price${direction ? ` status-bar__price--${direction}` : ''}`}>
           {formatUsdPrice(lastPrice)}
         </span>
       )}
