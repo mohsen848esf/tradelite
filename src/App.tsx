@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { usePersistedState } from '@/hooks/usePersistedState'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { Header } from '@/components/layout/Header'
@@ -15,6 +16,8 @@ import { STORAGE_KEYS } from '@/constants/storage'
 import { useKlineStream } from '@/hooks/useKlineStream'
 import { useTicker24h } from '@/hooks/useTicker24h'
 import { usePriceAlerts } from '@/hooks/usePriceAlerts'
+import { getSymbolLabel } from '@/utils/symbolLabel'
+import { formatUsdPrice } from '@/utils/formatPrice'
 import './App.css'
 
 function App() {
@@ -29,6 +32,15 @@ function App() {
     requestNotificationPermission,
   } = usePriceAlerts(lastPrice, symbol)
   const ticker = useTicker24h(symbol)
+
+  useEffect(() => {
+    const label = getSymbolLabel(symbol)
+    if (lastPrice !== null) {
+      document.title = `${label} - ${formatUsdPrice(lastPrice)} | Tradelite`
+    } else {
+      document.title = `${label} | Tradelite`
+    }
+  }, [symbol, lastPrice])
 
   return (
     <AppLayout
