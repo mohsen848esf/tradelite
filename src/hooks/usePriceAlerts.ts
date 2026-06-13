@@ -20,7 +20,7 @@ function saveAlerts(alerts: PriceAlert[]) {
 
 function playAlertSound() {
   try {
-    const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext
+    const AudioContextClass = window.AudioContext || (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext
     if (!AudioContextClass) return
     const ctx = new AudioContextClass()
     const osc = ctx.createOscillator()
