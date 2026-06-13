@@ -45,6 +45,8 @@ export type Ticker24h = {
   symbol: string
   priceChangePercent: number
   lastPrice: number
+  highPrice?: number
+  lowPrice?: number
 }
 
 export async function fetchTicker24h(symbol: string): Promise<Ticker24h> {
@@ -59,12 +61,16 @@ export async function fetchTicker24h(symbol: string): Promise<Ticker24h> {
     symbol: string
     priceChangePercent: string
     lastPrice: string
+    highPrice: string
+    lowPrice: string
   }
 
   return {
     symbol: data.symbol,
     priceChangePercent: Number(data.priceChangePercent),
     lastPrice: Number(data.lastPrice),
+    highPrice: Number(data.highPrice),
+    lowPrice: Number(data.lowPrice),
   }
 }
 
