@@ -42,12 +42,42 @@ function App() {
     }
   }, [symbol, lastPrice])
 
+  const handleResetSettings = () => {
+    setSymbol(DEFAULT_SYMBOL)
+    setInterval(KLINE_INTERVAL)
+  }
+
   return (
     <AppLayout
       header={
         <Header
           subtitle="Real-time crypto market viewer"
           status={status}
+          actions={
+            <button
+              type="button"
+              onClick={handleResetSettings}
+              style={{
+                background: 'transparent',
+                border: '1px solid #30363d',
+                borderRadius: '6px',
+                color: '#8b949e',
+                fontSize: '0.75rem',
+                padding: '0.25rem 0.5rem',
+                cursor: 'pointer',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = '#e6edf3'
+                e.currentTarget.style.borderColor = '#8b949e'
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = '#8b949e'
+                e.currentTarget.style.borderColor = '#30363d'
+              }}
+            >
+              Reset Settings
+            </button>
+          }
         />
       }
       sidebar={
