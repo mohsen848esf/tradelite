@@ -18,6 +18,26 @@ function saveAlerts(alerts: PriceAlert[]) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(alerts))
 }
 
+function playAlertSound() {
+  try {
+    const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext
+    if (!AudioContextClass) return
+    const ctx = new AudioContextClass()
+    const osc = ctx.createOscillator()
+    const gain = ctx.createGain()
+    osc.connect(gain)
+    gain.connect(ctx.destination)
+    osc.type = 'sine'
+    osc.frequency.setValueAtTime(880, ctx.currentTime) // A5 note
+    gain.gain.setValueAtTime(0.1, ctx.currentTime)
+    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.5)
+    osc.start(ctx.currentTime)
+    osc.stop(ctx.currentTime + 0.5)
+  } catch (e) {
+    console.error('Failed to play alert sound:', e)
+  }
+}
+
 type CreateAlertInput = {
   symbol: string
   targetPrice: number
@@ -81,6 +101,8 @@ export function usePriceAlerts(currentPrice: number | null, symbol: string) {
             body: `${alert.symbol} is ${alert.direction} ${formatUsdPrice(alert.targetPrice)}`,
           })
         }
+
+        playAlertSound()
 
         return { ...alert, triggered: true }
       })
