@@ -42,6 +42,8 @@ function App() {
     }
   }, [symbol, lastPrice])
 
+  const activeAlertsCount = alerts.filter((alert) => alert.symbol === symbol).length
+
   const handleResetSettings = () => {
     setSymbol(DEFAULT_SYMBOL)
     setInterval(KLINE_INTERVAL)
@@ -88,7 +90,26 @@ function App() {
           <SidebarPanel title="Interval">
             <IntervalSelector value={interval} onChange={setInterval} />
           </SidebarPanel>
-          <SidebarPanel title="Price Alerts">
+          <SidebarPanel
+            title="Price Alerts"
+            suffix={
+              activeAlertsCount > 0 && (
+                <span
+                  style={{
+                    backgroundColor: '#21262d',
+                    color: '#8b949e',
+                    fontSize: '0.6875rem',
+                    fontWeight: 'bold',
+                    padding: '0.125rem 0.375rem',
+                    borderRadius: '999px',
+                    lineHeight: 1,
+                  }}
+                >
+                  {activeAlertsCount}
+                </span>
+              )
+            }
+          >
             <PriceAlertForm
               symbol={symbol}
               currentPrice={lastPrice}

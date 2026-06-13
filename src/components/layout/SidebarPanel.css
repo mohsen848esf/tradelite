@@ -3,13 +3,25 @@
   border-bottom: 1px solid #21262d;
 }
 
+.sidebar-panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
 .sidebar-panel__title {
-  margin: 0 0 0.75rem;
+  margin: 0;
   font-size: 0.75rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: #8b949e;
+}
+
+.sidebar-panel__suffix {
+  display: flex;
+  align-items: center;
 }
 
 .sidebar-panel__content {
