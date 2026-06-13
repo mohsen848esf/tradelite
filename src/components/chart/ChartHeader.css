@@ -18,3 +18,33 @@
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
+
+.chart-header__info {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.chart-header__stats {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.75rem;
+}
+
+.chart-header__stat-label {
+  color: #8b949e;
+}
+
+.chart-header__stat-value {
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+.chart-header__stat-value--high {
+  color: #3fb950;
+}
+
+.chart-header__stat-value--low {
+  color: #f85149;
+}
+

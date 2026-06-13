@@ -82,7 +82,12 @@ function App() {
         />
       }
     >
-      <ChartHeader symbol={symbol} interval={interval} />
+      <ChartHeader
+        symbol={symbol}
+        interval={interval}
+        highPrice={ticker?.highPrice}
+        lowPrice={ticker?.lowPrice}
+      />
       <CandlestickChart symbol={symbol} interval={interval} kline={kline} />
       {error && <StreamErrorBanner message={error} onRetry={reconnect} />}
     </AppLayout>
