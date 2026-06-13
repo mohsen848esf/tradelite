@@ -33,7 +33,7 @@ export function PriceAlertList({ alerts, symbol, onRemove, onClearTriggered }: P
           >
             <div>
               <span className="price-alert-list__direction">
-                {alert.direction === 'above' ? '↑ Above' : '↓ Below'}
+                {alert.direction === 'above' ? '↑ Above' : '↓ Below'} • {new Date(alert.createdAt).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}
               </span>
               <span className="price-alert-list__price">
                 {formatUsdPrice(alert.targetPrice, 8)}
