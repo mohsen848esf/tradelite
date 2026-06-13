@@ -47,6 +47,7 @@ function App() {
       header={
         <Header
           subtitle="Real-time crypto market viewer"
+          status={status}
         />
       }
       sidebar={

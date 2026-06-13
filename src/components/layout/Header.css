@@ -34,3 +34,38 @@
   align-items: center;
   gap: 0.5rem;
 }
+
+.header__logo-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.header__status-dot {
+  position: absolute;
+  bottom: 0;
+  right: -2px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1.5px solid #0d1117;
+  background-color: #8b949e;
+}
+
+.header__status-dot--connected {
+  background-color: #3fb950;
+  box-shadow: 0 0 8px rgba(63, 185, 80, 0.4);
+}
+
+.header__status-dot--connecting {
+  background-color: #f0c14b;
+  box-shadow: 0 0 8px rgba(240, 193, 75, 0.4);
+}
+
+.header__status-dot--disconnected,
+.header__status-dot--error {
+  background-color: #f85149;
+  box-shadow: 0 0 8px rgba(248, 81, 73, 0.4);
+}
+
