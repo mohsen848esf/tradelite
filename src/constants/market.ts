@@ -10,6 +10,8 @@ export const SYMBOLS: SymbolPair[] = [
   { symbol: 'BNBUSDT', label: 'BNB / USDT' },
   { symbol: 'SOLUSDT', label: 'SOL / USDT' },
   { symbol: 'XRPUSDT', label: 'XRP / USDT' },
+  { symbol: 'ADAUSDT', label: 'ADA / USDT' },
+  { symbol: 'DOTUSDT', label: 'DOT / USDT' },
 ]
 
 export const KLINE_INTERVAL = '1m'
