@@ -60,6 +60,7 @@ function App() {
           <SidebarPanel title="Price Alerts">
             <PriceAlertForm
               symbol={symbol}
+              currentPrice={lastPrice}
               onSubmit={addAlert}
               onRequestNotifications={() => void requestNotificationPermission()}
             />

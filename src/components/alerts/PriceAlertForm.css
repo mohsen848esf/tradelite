@@ -50,3 +50,24 @@
   border-color: #58a6ff;
   color: #58a6ff;
 }
+
+.price-alert-form__label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.price-alert-form__use-current {
+  background: transparent;
+  border: none;
+  color: #58a6ff;
+  font-size: 0.75rem;
+  cursor: pointer;
+  padding: 0;
+}
+
+.price-alert-form__use-current:hover {
+  text-decoration: underline;
+  color: #79c0ff;
+}
+

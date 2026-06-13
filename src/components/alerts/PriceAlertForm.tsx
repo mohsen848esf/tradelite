@@ -4,6 +4,7 @@ import './PriceAlertForm.css'
 
 type PriceAlertFormProps = {
   symbol: string
+  currentPrice?: number | null
   onSubmit: (input: {
     symbol: string
     targetPrice: number
@@ -12,7 +13,7 @@ type PriceAlertFormProps = {
   onRequestNotifications?: () => void
 }
 
-export function PriceAlertForm({ symbol, onSubmit, onRequestNotifications }: PriceAlertFormProps) {
+export function PriceAlertForm({ symbol, currentPrice, onSubmit, onRequestNotifications }: PriceAlertFormProps) {
   const [targetPrice, setTargetPrice] = useState('')
   const [direction, setDirection] = useState<PriceAlert['direction']>('above')
 
@@ -32,7 +33,18 @@ export function PriceAlertForm({ symbol, onSubmit, onRequestNotifications }: Pri
   return (
     <form className="price-alert-form" onSubmit={handleSubmit}>
       <label className="price-alert-form__field">
-        <span>Target price</span>
+        <div className="price-alert-form__label-row">
+          <span>Target price</span>
+          {currentPrice !== undefined && currentPrice !== null && (
+            <button
+              type="button"
+              className="price-alert-form__use-current"
+              onClick={() => setTargetPrice(currentPrice.toString())}
+            >
+              Use current ({currentPrice})
+            </button>
+          )}
+        </div>
         <input
           type="number"
           min="0"
