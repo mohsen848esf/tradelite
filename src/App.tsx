@@ -11,6 +11,7 @@ import { CandlestickChart } from '@/components/chart/CandlestickChart'
 import { IntervalSelector } from '@/components/market/IntervalSelector'
 import { StreamErrorBanner } from '@/components/market/StreamErrorBanner'
 import { SymbolSelector } from '@/components/market/SymbolSelector'
+import { WatchlistPanel } from '@/components/market/WatchlistPanel'
 import { DEFAULT_SYMBOL, KLINE_INTERVAL, type KlineInterval } from '@/constants/market'
 import { STORAGE_KEYS } from '@/constants/storage'
 import { useKlineStream } from '@/hooks/useKlineStream'
@@ -86,6 +87,9 @@ function App() {
         <>
           <SidebarPanel title="Markets">
             <SymbolSelector value={symbol} onChange={setSymbol} />
+          </SidebarPanel>
+          <SidebarPanel title="Watchlist">
+            <WatchlistPanel activeSymbol={symbol} onChangeSymbol={setSymbol} />
           </SidebarPanel>
           <SidebarPanel title="Interval">
             <IntervalSelector value={interval} onChange={setInterval} />
