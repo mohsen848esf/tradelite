@@ -8,10 +8,9 @@ type TrendlineCanvasProps = {
   active: boolean
   lines: Trendline[]
   onAddLine: (line: Trendline) => void
-  onClearLines: () => void
 }
 
-export function TrendlineCanvas({ active, lines, onAddLine, onClearLines }: TrendlineCanvasProps) {
+export function TrendlineCanvas({ active, lines, onAddLine }: TrendlineCanvasProps) {
   const [startPoint, setStartPoint] = useState<LinePoint | null>(null)
   const [currentPoint, setCurrentPoint] = useState<LinePoint | null>(null)
   const containerRef = useRef<HTMLDivElement>(null)
