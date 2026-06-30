@@ -225,6 +225,7 @@ function App() {
                 layoutMode={layoutMode}
                 onLayoutModeChange={setLayoutMode}
                 onExport={() => chartRef1.current?.exportCsv()}
+                onSnapshot={() => chartRef1.current?.exportSnapshot()}
               />
               <CandlestickChart
                 ref={chartRef1}
@@ -268,6 +269,7 @@ function App() {
                   layoutMode={layoutMode}
                   onLayoutModeChange={setLayoutMode}
                   onExport={() => chartRef1.current?.exportCsv()}
+                  onSnapshot={() => chartRef1.current?.exportSnapshot()}
                 />
                 <CandlestickChart
                   ref={chartRef1}
@@ -309,6 +311,7 @@ function App() {
                   layoutMode={layoutMode}
                   onLayoutModeChange={setLayoutMode}
                   onExport={() => chartRef2.current?.exportCsv()}
+                  onSnapshot={() => chartRef2.current?.exportSnapshot()}
                 />
                 <CandlestickChart
                   ref={chartRef2}
