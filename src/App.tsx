@@ -31,13 +31,24 @@ function App() {
   const [showEMA, setShowEMA] = useState(false)
 
   // Multi-chart states
+  // Multi-chart states
   const [layoutMode, setLayoutMode] = usePersistedState<'single' | 'split'>(STORAGE_KEYS.layoutMode, 'single')
   const [symbol2, setSymbol2] = usePersistedState(STORAGE_KEYS.selectedSymbol2, 'ETHUSDT')
   const [interval2, setInterval2] = usePersistedState<KlineInterval>(STORAGE_KEYS.chartInterval2, KLINE_INTERVAL)
   const [activeChartId, setActiveChartId] = useState<1 | 2>(1)
-  if (false) console.log(setActiveChartId)
 
   const { kline, lastPrice, status, error, reconnect } = useKlineStream({ symbol, interval })
+  const {
+    kline: kline2,
+    lastPrice: lastPrice2,
+    status: status2,
+    error: error2,
+    reconnect: reconnect2,
+  } = useKlineStream({
+    symbol: symbol2,
+    interval: interval2,
+    enabled: layoutMode === 'split',
+  })
 
   const currentSymbolValue = activeChartId === 1 ? symbol : symbol2
   const currentIntervalValue = activeChartId === 1 ? interval : interval2
@@ -57,29 +68,38 @@ function App() {
       setInterval2(newInterval)
     }
   }
+
   const {
     alerts,
     addAlert,
     removeAlert,
     clearTriggered,
     requestNotificationPermission,
-  } = usePriceAlerts(lastPrice, symbol)
+  } = usePriceAlerts(activeChartId === 1 ? lastPrice : lastPrice2, currentSymbolValue)
+
   const ticker = useTicker24h(symbol)
+  const ticker2 = useTicker24h(symbol2)
 
   useEffect(() => {
-    const label = getSymbolLabel(symbol)
-    if (lastPrice !== null) {
-      document.title = `${label} - ${formatUsdPrice(lastPrice)} | Tradelite`
+    const activeSymbol = activeChartId === 1 ? symbol : symbol2
+    const activePrice = activeChartId === 1 ? lastPrice : lastPrice2
+    const label = getSymbolLabel(activeSymbol)
+    if (activePrice !== null) {
+      document.title = `${label} - ${formatUsdPrice(activePrice)} | Tradelite`
     } else {
       document.title = `${label} | Tradelite`
     }
-  }, [symbol, lastPrice])
+  }, [symbol, symbol2, lastPrice, lastPrice2, activeChartId])
 
-  const activeAlertsCount = alerts.filter((alert) => alert.symbol === symbol).length
+  const activeAlertsCount = alerts.filter((alert) => alert.symbol === currentSymbolValue).length
 
   const handleResetSettings = () => {
     setSymbol(DEFAULT_SYMBOL)
     setInterval(KLINE_INTERVAL)
+    setSymbol2('ETHUSDT')
+    setInterval2(KLINE_INTERVAL)
+    setLayoutMode('single')
+    setActiveChartId(1)
   }
 
   return (
@@ -147,14 +167,14 @@ function App() {
             }
           >
             <PriceAlertForm
-              symbol={symbol}
-              currentPrice={lastPrice}
+              symbol={currentSymbolValue}
+              currentPrice={activeChartId === 1 ? lastPrice : lastPrice2}
               onSubmit={addAlert}
               onRequestNotifications={() => void requestNotificationPermission()}
             />
             <PriceAlertList
               alerts={alerts}
-              symbol={symbol}
+              symbol={currentSymbolValue}
               onRemove={removeAlert}
               onClearTriggered={clearTriggered}
             />
@@ -163,35 +183,92 @@ function App() {
       }
       footer={
         <StatusBar
-          symbol={symbol}
-          status={status}
-          lastPrice={lastPrice ?? undefined}
-          priceChangePercent={ticker?.priceChangePercent}
+          symbol={currentSymbolValue}
+          status={activeChartId === 1 ? status : status2}
+          lastPrice={(activeChartId === 1 ? lastPrice : lastPrice2) ?? undefined}
+          priceChangePercent={activeChartId === 1 ? ticker?.priceChangePercent : ticker2?.priceChangePercent}
         />
       }
     >
       <div className="workspace-layout">
         <div className="workspace-layout__main">
-          <ChartHeader
-            symbol={symbol}
-            interval={interval}
-            highPrice={ticker?.highPrice}
-            lowPrice={ticker?.lowPrice}
-            showSMA={showSMA}
-            showEMA={showEMA}
-            onToggleSMA={() => setShowSMA((prev) => !prev)}
-            onToggleEMA={() => setShowEMA((prev) => !prev)}
-            layoutMode={layoutMode}
-            onLayoutModeChange={setLayoutMode}
-          />
-          <CandlestickChart
-            symbol={symbol}
-            interval={interval}
-            kline={kline}
-            showSMA={showSMA}
-            showEMA={showEMA}
-          />
-          {error && <StreamErrorBanner message={error} onRetry={reconnect} />}
+          {layoutMode === 'single' ? (
+            <div className="chart-panel chart-panel--active">
+              <ChartHeader
+                symbol={symbol}
+                interval={interval}
+                highPrice={ticker?.highPrice}
+                lowPrice={ticker?.lowPrice}
+                showSMA={showSMA}
+                showEMA={showEMA}
+                onToggleSMA={() => setShowSMA((prev) => !prev)}
+                onToggleEMA={() => setShowEMA((prev) => !prev)}
+                layoutMode={layoutMode}
+                onLayoutModeChange={setLayoutMode}
+              />
+              <CandlestickChart
+                symbol={symbol}
+                interval={interval}
+                kline={kline}
+                showSMA={showSMA}
+                showEMA={showEMA}
+              />
+              {error && <StreamErrorBanner message={error} onRetry={reconnect} />}
+            </div>
+          ) : (
+            <div className="charts-grid">
+              <div
+                className={`chart-panel${activeChartId === 1 ? ' chart-panel--active' : ''}`}
+                onClick={() => setActiveChartId(1)}
+              >
+                <ChartHeader
+                  symbol={symbol}
+                  interval={interval}
+                  highPrice={ticker?.highPrice}
+                  lowPrice={ticker?.lowPrice}
+                  showSMA={showSMA}
+                  showEMA={showEMA}
+                  onToggleSMA={() => setShowSMA((prev) => !prev)}
+                  onToggleEMA={() => setShowEMA((prev) => !prev)}
+                  layoutMode={layoutMode}
+                  onLayoutModeChange={setLayoutMode}
+                />
+                <CandlestickChart
+                  symbol={symbol}
+                  interval={interval}
+                  kline={kline}
+                  showSMA={showSMA}
+                  showEMA={showEMA}
+                />
+                {error && <StreamErrorBanner message={error} onRetry={reconnect} />}
+              </div>
+              <div
+                className={`chart-panel${activeChartId === 2 ? ' chart-panel--active' : ''}`}
+                onClick={() => setActiveChartId(2)}
+              >
+                <ChartHeader
+                  symbol={symbol2}
+                  interval={interval2}
+                  highPrice={ticker2?.highPrice}
+                  lowPrice={ticker2?.lowPrice}
+                  showSMA={showSMA}
+                  showEMA={showEMA}
+                  onToggleSMA={() => setShowSMA((prev) => !prev)}
+                  onToggleEMA={() => setShowEMA((prev) => !prev)}
+                  layoutMode={layoutMode}
+                  onLayoutModeChange={setLayoutMode}
+                />
+                <CandlestickChart
+                  symbol={symbol2}
+                  interval={interval2}
+                  kline={kline2}
+                  showSMA={showSMA}
+                  showEMA={showEMA}
+                />
+                {error2 && <StreamErrorBanner message={error2} onRetry={reconnect2} />}
+              </div>
+            </div>
+          )}
         </div>
         <div className="workspace-layout__side">
           <div className="workspace-layout__tab-header">
@@ -212,10 +289,10 @@ function App() {
           </div>
           <div className="workspace-layout__tab-content">
             {activeTab === 'orderbook' && (
-              <OrderBook symbol={symbol} currentPrice={lastPrice} />
+              <OrderBook symbol={currentSymbolValue} currentPrice={activeChartId === 1 ? lastPrice : lastPrice2} />
             )}
             {activeTab === 'trades' && (
-              <RecentTrades symbol={symbol} />
+              <RecentTrades symbol={currentSymbolValue} />
             )}
           </div>
         </div>
