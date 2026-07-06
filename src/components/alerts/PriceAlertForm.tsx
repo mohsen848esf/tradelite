@@ -9,6 +9,7 @@ type PriceAlertFormProps = {
     symbol: string
     targetPrice: number
     direction: PriceAlert['direction']
+    note?: string
   }) => void
   onRequestNotifications?: () => void
 }
@@ -16,6 +17,7 @@ type PriceAlertFormProps = {
 export function PriceAlertForm({ symbol, currentPrice, onSubmit, onRequestNotifications }: PriceAlertFormProps) {
   const [targetPrice, setTargetPrice] = useState('')
   const [direction, setDirection] = useState<PriceAlert['direction']>('above')
+  const [note, setNote] = useState('')
 
   function handleSubmit(event: FormEvent) {
     event.preventDefault()
@@ -26,8 +28,9 @@ export function PriceAlertForm({ symbol, currentPrice, onSubmit, onRequestNotifi
       return
     }
 
-    onSubmit({ symbol, targetPrice: price, direction })
+    onSubmit({ symbol, targetPrice: price, direction, note: note.trim() || undefined })
     setTargetPrice('')
+    setNote('')
   }
 
   return (
@@ -62,6 +65,16 @@ export function PriceAlertForm({ symbol, currentPrice, onSubmit, onRequestNotifi
           <option value="above">Price goes above</option>
           <option value="below">Price goes below</option>
         </select>
+      </label>
+
+      <label className="price-alert-form__field">
+        <span>Description / Note (optional)</span>
+        <input
+          type="text"
+          value={note}
+          onChange={(event) => setNote(event.target.value)}
+          placeholder="e.g. Resistance level target"
+        />
       </label>
 
       <button type="submit" className="price-alert-form__submit">
