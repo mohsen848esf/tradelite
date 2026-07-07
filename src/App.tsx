@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { usePersistedState } from '@/hooks/usePersistedState'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { Header } from '@/components/layout/Header'
@@ -12,6 +12,7 @@ import { IntervalSelector } from '@/components/market/IntervalSelector'
 import { StreamErrorBanner } from '@/components/market/StreamErrorBanner'
 import { SymbolSelector } from '@/components/market/SymbolSelector'
 import { WatchlistPanel } from '@/components/market/WatchlistPanel'
+import { OrderBook } from '@/components/market/OrderBook'
 import { DEFAULT_SYMBOL, KLINE_INTERVAL, type KlineInterval } from '@/constants/market'
 import { STORAGE_KEYS } from '@/constants/storage'
 import { useKlineStream } from '@/hooks/useKlineStream'
@@ -24,6 +25,7 @@ import './App.css'
 function App() {
   const [symbol, setSymbol] = usePersistedState(STORAGE_KEYS.selectedSymbol, DEFAULT_SYMBOL)
   const [interval, setInterval] = usePersistedState<KlineInterval>(STORAGE_KEYS.chartInterval, KLINE_INTERVAL)
+  const [activeTab, setActiveTab] = useState<'orderbook' | 'trades'>('orderbook')
   const { kline, lastPrice, status, error, reconnect } = useKlineStream({ symbol, interval })
   const {
     alerts,
@@ -138,14 +140,46 @@ function App() {
         />
       }
     >
-      <ChartHeader
-        symbol={symbol}
-        interval={interval}
-        highPrice={ticker?.highPrice}
-        lowPrice={ticker?.lowPrice}
-      />
-      <CandlestickChart symbol={symbol} interval={interval} kline={kline} />
-      {error && <StreamErrorBanner message={error} onRetry={reconnect} />}
+      <div className="workspace-layout">
+        <div className="workspace-layout__main">
+          <ChartHeader
+            symbol={symbol}
+            interval={interval}
+            highPrice={ticker?.highPrice}
+            lowPrice={ticker?.lowPrice}
+          />
+          <CandlestickChart symbol={symbol} interval={interval} kline={kline} />
+          {error && <StreamErrorBanner message={error} onRetry={reconnect} />}
+        </div>
+        <div className="workspace-layout__side">
+          <div className="workspace-layout__tab-header">
+            <button
+              type="button"
+              className={`workspace-layout__tab-btn${activeTab === 'orderbook' ? ' workspace-layout__tab-btn--active' : ''}`}
+              onClick={() => setActiveTab('orderbook')}
+            >
+              Order Book
+            </button>
+            <button
+              type="button"
+              className={`workspace-layout__tab-btn${activeTab === 'trades' ? ' workspace-layout__tab-btn--active' : ''}`}
+              onClick={() => setActiveTab('trades')}
+            >
+              Recent Trades
+            </button>
+          </div>
+          <div className="workspace-layout__tab-content">
+            {activeTab === 'orderbook' && (
+              <OrderBook symbol={symbol} currentPrice={lastPrice} />
+            )}
+            {activeTab === 'trades' && (
+              <div style={{ padding: '1rem', color: '#8b949e', fontStyle: 'italic', fontSize: '0.75rem' }}>
+                Recent trades streaming soon…
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
     </AppLayout>
   )
 }
