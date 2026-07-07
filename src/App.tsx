@@ -13,6 +13,7 @@ import { StreamErrorBanner } from '@/components/market/StreamErrorBanner'
 import { SymbolSelector } from '@/components/market/SymbolSelector'
 import { WatchlistPanel } from '@/components/market/WatchlistPanel'
 import { OrderBook } from '@/components/market/OrderBook'
+import { RecentTrades } from '@/components/market/RecentTrades'
 import { DEFAULT_SYMBOL, KLINE_INTERVAL, type KlineInterval } from '@/constants/market'
 import { STORAGE_KEYS } from '@/constants/storage'
 import { useKlineStream } from '@/hooks/useKlineStream'
@@ -173,9 +174,7 @@ function App() {
               <OrderBook symbol={symbol} currentPrice={lastPrice} />
             )}
             {activeTab === 'trades' && (
-              <div style={{ padding: '1rem', color: '#8b949e', fontStyle: 'italic', fontSize: '0.75rem' }}>
-                Recent trades streaming soon…
-              </div>
+              <RecentTrades symbol={symbol} />
             )}
           </div>
         </div>
