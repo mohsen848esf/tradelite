@@ -1,0 +1,73 @@
+.recent-trades {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  font-family: monospace;
+  font-size: 0.75rem;
+  background: #0d1117;
+  color: #c9d1d9;
+}
+
+.recent-trades__header {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  padding: 0.375rem 0.5rem;
+  border-bottom: 1px solid #21262d;
+  font-weight: 600;
+  color: #8b949e;
+}
+
+.recent-trades__col-label {
+  font-size: 0.6875rem;
+}
+
+.recent-trades__list {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  height: 100%;
+  max-height: 520px;
+}
+
+.recent-trades__loading {
+  padding: 1rem;
+  color: #8b949e;
+  text-align: center;
+  font-style: italic;
+}
+
+.recent-trades__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  padding: 0.1875rem 0.5rem;
+  align-items: center;
+  transition: background 0.1s;
+}
+
+.recent-trades__row:hover {
+  background: #161b22;
+}
+
+.recent-trades__value {
+  font-variant-numeric: tabular-nums;
+}
+
+.recent-trades__value--price {
+  font-weight: 500;
+}
+
+.recent-trades__row--buy .recent-trades__value--price {
+  color: #3fb950;
+}
+
+.recent-trades__row--sell .recent-trades__value--price {
+  color: #f85149;
+}
+
+.recent-trades__value--time {
+  color: #8b949e;
+}
+
+.text-right {
+  text-align: right;
+}
