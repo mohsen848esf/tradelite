@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import {
   CandlestickSeries,
+  LineSeries,
   ColorType,
   createChart,
   type IChartApi,
@@ -8,6 +9,7 @@ import {
   type UTCTimestamp,
 } from 'lightweight-charts'
 import { fetchHistoricalKlines } from '@/services/binance'
+import { calculateSMA, calculateEMA } from '@/utils/indicators'
 import type { Kline } from '@/types/market'
 import './CandlestickChart.css'
 
@@ -15,6 +17,8 @@ type CandlestickChartProps = {
   symbol: string
   interval: string
   kline: Kline | null
+  showSMA: boolean
+  showEMA: boolean
 }
 
 function toChartCandle(kline: Kline) {
@@ -27,10 +31,19 @@ function toChartCandle(kline: Kline) {
   }
 }
 
-export function CandlestickChart({ symbol, interval, kline }: CandlestickChartProps) {
+export function CandlestickChart({
+  symbol,
+  interval,
+  kline,
+  showSMA,
+  showEMA,
+}: CandlestickChartProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const chartRef = useRef<IChartApi | null>(null)
   const seriesRef = useRef<ISeriesApi<'Candlestick'> | null>(null)
+  const smaSeriesRef = useRef<ISeriesApi<'Line'> | null>(null)
+  const emaSeriesRef = useRef<ISeriesApi<'Line'> | null>(null)
+  const historyRef = useRef<Kline[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -70,8 +83,24 @@ export function CandlestickChart({ symbol, interval, kline }: CandlestickChartPr
       wickDownColor: '#f85149',
     })
 
+    const smaSeries = chart.addSeries(LineSeries, {
+      color: '#e3b341',
+      lineWidth: 2,
+      lastValueVisible: false,
+      priceLineVisible: false,
+    })
+
+    const emaSeries = chart.addSeries(LineSeries, {
+      color: '#58a6ff',
+      lineWidth: 2,
+      lastValueVisible: false,
+      priceLineVisible: false,
+    })
+
     chartRef.current = chart
     seriesRef.current = series
+    smaSeriesRef.current = smaSeries
+    emaSeriesRef.current = emaSeries
 
     const resizeObserver = new ResizeObserver((entries) => {
       const entry = entries[0]
@@ -90,6 +119,8 @@ export function CandlestickChart({ symbol, interval, kline }: CandlestickChartPr
       chart.remove()
       chartRef.current = null
       seriesRef.current = null
+      smaSeriesRef.current = null
+      emaSeriesRef.current = null
     }
   }, [])
 
@@ -112,7 +143,25 @@ export function CandlestickChart({ symbol, interval, kline }: CandlestickChartPr
           return
         }
 
+        historyRef.current = history
         seriesRef.current.setData(history.map(toChartCandle))
+
+        // Set initial indicator values
+        if (smaSeriesRef.current) {
+          const smaData = calculateSMA(history, 14).map((p) => ({
+            time: p.time as UTCTimestamp,
+            value: p.value,
+          }))
+          smaSeriesRef.current.setData(smaData)
+        }
+        if (emaSeriesRef.current) {
+          const emaData = calculateEMA(history, 20).map((p) => ({
+            time: p.time as UTCTimestamp,
+            value: p.value,
+          }))
+          emaSeriesRef.current.setData(emaData)
+        }
+
         chartRef.current?.timeScale().fitContent()
       } catch (loadError) {
         if (!cancelled) {
@@ -132,14 +181,54 @@ export function CandlestickChart({ symbol, interval, kline }: CandlestickChartPr
     }
   }, [symbol, interval])
 
+  // Apply visibility options when state changes
+  useEffect(() => {
+    smaSeriesRef.current?.applyOptions({ visible: showSMA })
+  }, [showSMA])
+
+  useEffect(() => {
+    emaSeriesRef.current?.applyOptions({ visible: showEMA })
+  }, [showEMA])
+
   useEffect(() => {
     const series = seriesRef.current
+    const smaSeries = smaSeriesRef.current
+    const emaSeries = emaSeriesRef.current
 
     if (!series || !kline) {
       return
     }
 
     series.update(toChartCandle(kline))
+
+    // Update history ref
+    const history = historyRef.current
+    if (history.length > 0) {
+      const lastIndex = history.length - 1
+      if (history[lastIndex].time === kline.time) {
+        history[lastIndex] = kline
+      } else {
+        history.push(kline)
+      }
+
+      // Recompute and update SMA/EMA in real-time
+      const smaData = calculateSMA(history, 14)
+      if (smaData.length > 0 && smaSeries) {
+        const lastPoint = smaData[smaData.length - 1]
+        smaSeries.update({
+          time: lastPoint.time as UTCTimestamp,
+          value: lastPoint.value,
+        })
+      }
+      const emaData = calculateEMA(history, 20)
+      if (emaData.length > 0 && emaSeries) {
+        const lastPoint = emaData[emaData.length - 1]
+        emaSeries.update({
+          time: lastPoint.time as UTCTimestamp,
+          value: lastPoint.value,
+        })
+      }
+    }
   }, [kline])
 
   return (
