@@ -48,3 +48,38 @@
   color: #f85149;
 }
 
+.chart-header__controls {
+  display: flex;
+  gap: 0.5rem;
+  margin-left: 1rem;
+}
+
+.chart-header__indicator-btn {
+  background: transparent;
+  border: 1px solid #30363d;
+  border-radius: 4px;
+  color: #8b949e;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+
+.chart-header__indicator-btn:hover {
+  color: #e6edf3;
+  border-color: #8b949e;
+}
+
+.chart-header__indicator-btn--sma-active {
+  color: #0d1117;
+  background: #e3b341;
+  border-color: #e3b341;
+}
+
+.chart-header__indicator-btn--ema-active {
+  color: #0d1117;
+  background: #58a6ff;
+  border-color: #58a6ff;
+}
+

@@ -27,6 +27,8 @@ function App() {
   const [symbol, setSymbol] = usePersistedState(STORAGE_KEYS.selectedSymbol, DEFAULT_SYMBOL)
   const [interval, setInterval] = usePersistedState<KlineInterval>(STORAGE_KEYS.chartInterval, KLINE_INTERVAL)
   const [activeTab, setActiveTab] = useState<'orderbook' | 'trades'>('orderbook')
+  const [showSMA, setShowSMA] = useState(false)
+  const [showEMA, setShowEMA] = useState(false)
   const { kline, lastPrice, status, error, reconnect } = useKlineStream({ symbol, interval })
   const {
     alerts,
@@ -148,8 +150,18 @@ function App() {
             interval={interval}
             highPrice={ticker?.highPrice}
             lowPrice={ticker?.lowPrice}
+            showSMA={showSMA}
+            showEMA={showEMA}
+            onToggleSMA={() => setShowSMA((prev) => !prev)}
+            onToggleEMA={() => setShowEMA((prev) => !prev)}
           />
-          <CandlestickChart symbol={symbol} interval={interval} kline={kline} />
+          <CandlestickChart
+            symbol={symbol}
+            interval={interval}
+            kline={kline}
+            showSMA={showSMA}
+            showEMA={showEMA}
+          />
           {error && <StreamErrorBanner message={error} onRetry={reconnect} />}
         </div>
         <div className="workspace-layout__side">
