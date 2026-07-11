@@ -7,9 +7,28 @@ type ChartHeaderProps = {
   interval: string
   highPrice?: number
   lowPrice?: number
+  showSMA: boolean
+  showEMA: boolean
+  onToggleSMA: () => void
+  onToggleEMA: () => void
+  layoutMode: 'single' | 'split'
+  onLayoutModeChange: (mode: 'single' | 'split') => void
+  onExport: () => void
 }
 
-export function ChartHeader({ symbol, interval, highPrice, lowPrice }: ChartHeaderProps) {
+export function ChartHeader({
+  symbol,
+  interval,
+  highPrice,
+  lowPrice,
+  showSMA,
+  showEMA,
+  onToggleSMA,
+  onToggleEMA,
+  layoutMode,
+  onLayoutModeChange,
+  onExport,
+}: ChartHeaderProps) {
   const label = getSymbolLabel(symbol)
 
   return (
@@ -17,6 +36,45 @@ export function ChartHeader({ symbol, interval, highPrice, lowPrice }: ChartHead
       <div className="chart-header__info">
         <h2 className="chart-header__title">{label}</h2>
         <span className="chart-header__interval">{interval} candlesticks</span>
+        <div className="chart-header__controls">
+          <button
+            type="button"
+            className={`chart-header__indicator-btn${showSMA ? ' chart-header__indicator-btn--sma-active' : ''}`}
+            onClick={onToggleSMA}
+          >
+            SMA (14)
+          </button>
+          <button
+            type="button"
+            className={`chart-header__indicator-btn${showEMA ? ' chart-header__indicator-btn--ema-active' : ''}`}
+            onClick={onToggleEMA}
+          >
+            EMA (20)
+          </button>
+          <span style={{ borderLeft: '1px solid #21262d', margin: '0 0.25rem' }} />
+          <button
+            type="button"
+            className={`chart-header__indicator-btn${layoutMode === 'single' ? ' chart-header__indicator-btn--active' : ''}`}
+            onClick={() => onLayoutModeChange('single')}
+          >
+            Single
+          </button>
+          <button
+            type="button"
+            className={`chart-header__indicator-btn${layoutMode === 'split' ? ' chart-header__indicator-btn--active' : ''}`}
+            onClick={() => onLayoutModeChange('split')}
+          >
+            Split
+          </button>
+          <span style={{ borderLeft: '1px solid #21262d', margin: '0 0.25rem' }} />
+          <button
+            type="button"
+            className="chart-header__indicator-btn"
+            onClick={onExport}
+          >
+            Export CSV
+          </button>
+        </div>
       </div>
       {(highPrice !== undefined || lowPrice !== undefined) && (
         <div className="chart-header__stats">
