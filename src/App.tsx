@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { usePersistedState } from '@/hooks/usePersistedState'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { Header } from '@/components/layout/Header'
@@ -7,7 +7,7 @@ import { StatusBar } from '@/components/layout/StatusBar'
 import { PriceAlertForm } from '@/components/alerts/PriceAlertForm'
 import { PriceAlertList } from '@/components/alerts/PriceAlertList'
 import { ChartHeader } from '@/components/chart/ChartHeader'
-import { CandlestickChart } from '@/components/chart/CandlestickChart'
+import { CandlestickChart, type CandlestickChartRef } from '@/components/chart/CandlestickChart'
 import { IntervalSelector } from '@/components/market/IntervalSelector'
 import { StreamErrorBanner } from '@/components/market/StreamErrorBanner'
 import { SymbolSelector } from '@/components/market/SymbolSelector'
@@ -31,11 +31,14 @@ function App() {
   const [showEMA, setShowEMA] = useState(false)
 
   // Multi-chart states
-  // Multi-chart states
   const [layoutMode, setLayoutMode] = usePersistedState<'single' | 'split'>(STORAGE_KEYS.layoutMode, 'single')
   const [symbol2, setSymbol2] = usePersistedState(STORAGE_KEYS.selectedSymbol2, 'ETHUSDT')
   const [interval2, setInterval2] = usePersistedState<KlineInterval>(STORAGE_KEYS.chartInterval2, KLINE_INTERVAL)
   const [activeChartId, setActiveChartId] = useState<1 | 2>(1)
+
+  // Chart refs for CSV exporting
+  const chartRef1 = useRef<CandlestickChartRef>(null)
+  const chartRef2 = useRef<CandlestickChartRef>(null)
 
   const { kline, lastPrice, status, error, reconnect } = useKlineStream({ symbol, interval })
   const {
@@ -205,8 +208,10 @@ function App() {
                 onToggleEMA={() => setShowEMA((prev) => !prev)}
                 layoutMode={layoutMode}
                 onLayoutModeChange={setLayoutMode}
+                onExport={() => chartRef1.current?.exportCsv()}
               />
               <CandlestickChart
+                ref={chartRef1}
                 symbol={symbol}
                 interval={interval}
                 kline={kline}
@@ -232,8 +237,10 @@ function App() {
                   onToggleEMA={() => setShowEMA((prev) => !prev)}
                   layoutMode={layoutMode}
                   onLayoutModeChange={setLayoutMode}
+                  onExport={() => chartRef1.current?.exportCsv()}
                 />
                 <CandlestickChart
+                  ref={chartRef1}
                   symbol={symbol}
                   interval={interval}
                   kline={kline}
@@ -257,8 +264,10 @@ function App() {
                   onToggleEMA={() => setShowEMA((prev) => !prev)}
                   layoutMode={layoutMode}
                   onLayoutModeChange={setLayoutMode}
+                  onExport={() => chartRef2.current?.exportCsv()}
                 />
                 <CandlestickChart
+                  ref={chartRef2}
                   symbol={symbol2}
                   interval={interval2}
                   kline={kline2}

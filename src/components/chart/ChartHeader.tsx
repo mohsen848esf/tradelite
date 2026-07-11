@@ -13,6 +13,7 @@ type ChartHeaderProps = {
   onToggleEMA: () => void
   layoutMode: 'single' | 'split'
   onLayoutModeChange: (mode: 'single' | 'split') => void
+  onExport: () => void
 }
 
 export function ChartHeader({
@@ -26,6 +27,7 @@ export function ChartHeader({
   onToggleEMA,
   layoutMode,
   onLayoutModeChange,
+  onExport,
 }: ChartHeaderProps) {
   const label = getSymbolLabel(symbol)
 
@@ -63,6 +65,14 @@ export function ChartHeader({
             onClick={() => onLayoutModeChange('split')}
           >
             Split
+          </button>
+          <span style={{ borderLeft: '1px solid #21262d', margin: '0 0.25rem' }} />
+          <button
+            type="button"
+            className="chart-header__indicator-btn"
+            onClick={onExport}
+          >
+            Export CSV
           </button>
         </div>
       </div>
