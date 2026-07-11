@@ -83,3 +83,9 @@
   border-color: #58a6ff;
 }
 
+.chart-header__indicator-btn--active {
+  color: #e6edf3;
+  background: #21262d;
+  border-color: #8b949e;
+}
+
