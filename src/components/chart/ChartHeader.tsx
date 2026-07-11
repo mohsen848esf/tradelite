@@ -11,6 +11,8 @@ type ChartHeaderProps = {
   showEMA: boolean
   onToggleSMA: () => void
   onToggleEMA: () => void
+  layoutMode: 'single' | 'split'
+  onLayoutModeChange: (mode: 'single' | 'split') => void
 }
 
 export function ChartHeader({
@@ -22,6 +24,8 @@ export function ChartHeader({
   showEMA,
   onToggleSMA,
   onToggleEMA,
+  layoutMode,
+  onLayoutModeChange,
 }: ChartHeaderProps) {
   const label = getSymbolLabel(symbol)
 
@@ -44,6 +48,21 @@ export function ChartHeader({
             onClick={onToggleEMA}
           >
             EMA (20)
+          </button>
+          <span style={{ borderLeft: '1px solid #21262d', margin: '0 0.25rem' }} />
+          <button
+            type="button"
+            className={`chart-header__indicator-btn${layoutMode === 'single' ? ' chart-header__indicator-btn--active' : ''}`}
+            onClick={() => onLayoutModeChange('single')}
+          >
+            Single
+          </button>
+          <button
+            type="button"
+            className={`chart-header__indicator-btn${layoutMode === 'split' ? ' chart-header__indicator-btn--active' : ''}`}
+            onClick={() => onLayoutModeChange('split')}
+          >
+            Split
           </button>
         </div>
       </div>

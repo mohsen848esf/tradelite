@@ -29,7 +29,34 @@ function App() {
   const [activeTab, setActiveTab] = useState<'orderbook' | 'trades'>('orderbook')
   const [showSMA, setShowSMA] = useState(false)
   const [showEMA, setShowEMA] = useState(false)
+
+  // Multi-chart states
+  const [layoutMode, setLayoutMode] = usePersistedState<'single' | 'split'>(STORAGE_KEYS.layoutMode, 'single')
+  const [symbol2, setSymbol2] = usePersistedState(STORAGE_KEYS.selectedSymbol2, 'ETHUSDT')
+  const [interval2, setInterval2] = usePersistedState<KlineInterval>(STORAGE_KEYS.chartInterval2, KLINE_INTERVAL)
+  const [activeChartId, setActiveChartId] = useState<1 | 2>(1)
+  if (false) console.log(setActiveChartId)
+
   const { kline, lastPrice, status, error, reconnect } = useKlineStream({ symbol, interval })
+
+  const currentSymbolValue = activeChartId === 1 ? symbol : symbol2
+  const currentIntervalValue = activeChartId === 1 ? interval : interval2
+
+  const handleSymbolChange = (newSymbol: string) => {
+    if (activeChartId === 1) {
+      setSymbol(newSymbol)
+    } else {
+      setSymbol2(newSymbol)
+    }
+  }
+
+  const handleIntervalChange = (newInterval: KlineInterval) => {
+    if (activeChartId === 1) {
+      setInterval(newInterval)
+    } else {
+      setInterval2(newInterval)
+    }
+  }
   const {
     alerts,
     addAlert,
@@ -91,13 +118,13 @@ function App() {
       sidebar={
         <>
           <SidebarPanel title="Markets">
-            <SymbolSelector value={symbol} onChange={setSymbol} />
+            <SymbolSelector value={currentSymbolValue} onChange={handleSymbolChange} />
           </SidebarPanel>
           <SidebarPanel title="Watchlist">
-            <WatchlistPanel activeSymbol={symbol} onChangeSymbol={setSymbol} />
+            <WatchlistPanel activeSymbol={currentSymbolValue} onChangeSymbol={handleSymbolChange} />
           </SidebarPanel>
           <SidebarPanel title="Interval">
-            <IntervalSelector value={interval} onChange={setInterval} />
+            <IntervalSelector value={currentIntervalValue} onChange={handleIntervalChange} />
           </SidebarPanel>
           <SidebarPanel
             title="Price Alerts"
@@ -154,6 +181,8 @@ function App() {
             showEMA={showEMA}
             onToggleSMA={() => setShowSMA((prev) => !prev)}
             onToggleEMA={() => setShowEMA((prev) => !prev)}
+            layoutMode={layoutMode}
+            onLayoutModeChange={setLayoutMode}
           />
           <CandlestickChart
             symbol={symbol}
