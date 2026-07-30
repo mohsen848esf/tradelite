@@ -24,6 +24,7 @@ type CandlestickChartProps = {
   kline: Kline | null
   showSMA: boolean
   showEMA: boolean
+  theme: 'dark' | 'light'
 }
 
 function toChartCandle(kline: Kline) {
@@ -38,7 +39,7 @@ function toChartCandle(kline: Kline) {
 
 export const CandlestickChart = forwardRef<CandlestickChartRef, CandlestickChartProps>(
   function CandlestickChart(
-    { symbol, interval, kline, showSMA, showEMA },
+    { symbol, interval, kline, showSMA, showEMA, theme },
     ref
   ) {
     const containerRef = useRef<HTMLDivElement>(null)
@@ -198,6 +199,30 @@ export const CandlestickChart = forwardRef<CandlestickChartRef, CandlestickChart
     useEffect(() => {
       emaSeriesRef.current?.applyOptions({ visible: showEMA })
     }, [showEMA])
+
+    // Apply theme changes dynamically to the chart
+    useEffect(() => {
+      const chart = chartRef.current
+      if (!chart) return
+
+      const isDark = theme === 'dark'
+      chart.applyOptions({
+        layout: {
+          background: { type: ColorType.Solid, color: isDark ? '#161b22' : '#ffffff' },
+          textColor: isDark ? '#8b949e' : '#57606a',
+        },
+        grid: {
+          vertLines: { color: isDark ? '#21262d' : '#e0e0e0' },
+          horzLines: { color: isDark ? '#21262d' : '#e0e0e0' },
+        },
+        rightPriceScale: {
+          borderColor: isDark ? '#30363d' : '#d0d7de',
+        },
+        timeScale: {
+          borderColor: isDark ? '#30363d' : '#d0d7de',
+        },
+      })
+    }, [theme])
 
     useEffect(() => {
       const series = seriesRef.current

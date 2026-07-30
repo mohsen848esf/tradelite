@@ -65,7 +65,25 @@
 
 .header__status-dot--disconnected,
 .header__status-dot--error {
-  background-color: #f85149;
+  background-color: var(--red);
   box-shadow: 0 0 8px rgba(248, 81, 73, 0.4);
+}
+
+.theme-toggle-btn {
+  background: transparent;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s, background-color 0.15s;
+}
+
+.theme-toggle-btn:hover {
+  color: var(--text-main);
+  border-color: var(--text-muted);
+  background-color: var(--panel-hover-bg);
 }
 

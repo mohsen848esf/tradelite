@@ -19,6 +19,7 @@ import { STORAGE_KEYS } from '@/constants/storage'
 import { useKlineStream } from '@/hooks/useKlineStream'
 import { useTicker24h } from '@/hooks/useTicker24h'
 import { usePriceAlerts } from '@/hooks/usePriceAlerts'
+import { useTheme } from '@/hooks/useTheme'
 import { getSymbolLabel } from '@/utils/symbolLabel'
 import { formatUsdPrice } from '@/utils/formatPrice'
 import './App.css'
@@ -29,6 +30,7 @@ function App() {
   const [activeTab, setActiveTab] = useState<'orderbook' | 'trades'>('orderbook')
   const [showSMA, setShowSMA] = useState(false)
   const [showEMA, setShowEMA] = useState(false)
+  const { theme, toggleTheme } = useTheme()
 
   // Multi-chart states
   const [layoutMode, setLayoutMode] = usePersistedState<'single' | 'split'>(STORAGE_KEYS.layoutMode, 'single')
@@ -112,29 +114,30 @@ function App() {
           subtitle="Real-time crypto market viewer"
           status={status}
           actions={
-            <button
-              type="button"
-              onClick={handleResetSettings}
-              style={{
-                background: 'transparent',
-                border: '1px solid #30363d',
-                borderRadius: '6px',
-                color: '#8b949e',
-                fontSize: '0.75rem',
-                padding: '0.25rem 0.5rem',
-                cursor: 'pointer',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.color = '#e6edf3'
-                e.currentTarget.style.borderColor = '#8b949e'
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.color = '#8b949e'
-                e.currentTarget.style.borderColor = '#30363d'
-              }}
-            >
-              Reset Settings
-            </button>
+            <>
+              <button
+                type="button"
+                className="theme-toggle-btn"
+                onClick={toggleTheme}
+              >
+                {theme === 'dark' ? '☀️ Light' : '🌙 Dark'}
+              </button>
+              <button
+                type="button"
+                onClick={handleResetSettings}
+                style={{
+                  background: 'transparent',
+                  border: '1px solid var(--border-color)',
+                  borderRadius: '6px',
+                  color: 'var(--text-muted)',
+                  fontSize: '0.75rem',
+                  padding: '0.25rem 0.5rem',
+                  cursor: 'pointer',
+                }}
+              >
+                Reset Settings
+              </button>
+            </>
           }
         />
       }
@@ -155,8 +158,8 @@ function App() {
               activeAlertsCount > 0 && (
                 <span
                   style={{
-                    backgroundColor: '#21262d',
-                    color: '#8b949e',
+                    backgroundColor: 'var(--border-color)',
+                    color: 'var(--text-muted)',
                     fontSize: '0.6875rem',
                     fontWeight: 'bold',
                     padding: '0.125rem 0.375rem',
@@ -217,6 +220,7 @@ function App() {
                 kline={kline}
                 showSMA={showSMA}
                 showEMA={showEMA}
+                theme={theme}
               />
               {error && <StreamErrorBanner message={error} onRetry={reconnect} />}
             </div>
@@ -246,6 +250,7 @@ function App() {
                   kline={kline}
                   showSMA={showSMA}
                   showEMA={showEMA}
+                  theme={theme}
                 />
                 {error && <StreamErrorBanner message={error} onRetry={reconnect} />}
               </div>
@@ -273,6 +278,7 @@ function App() {
                   kline={kline2}
                   showSMA={showSMA}
                   showEMA={showEMA}
+                  theme={theme}
                 />
                 {error2 && <StreamErrorBanner message={error2} onRetry={reconnect2} />}
               </div>
