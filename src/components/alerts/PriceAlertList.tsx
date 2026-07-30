@@ -38,6 +38,11 @@ export function PriceAlertList({ alerts, symbol, onRemove, onClearTriggered }: P
               <span className="price-alert-list__price">
                 {formatUsdPrice(alert.targetPrice, 8)}
               </span>
+              {alert.note && (
+                <div className="price-alert-list__note" style={{ fontSize: '0.6875rem', color: 'var(--text-muted)', marginTop: '0.125rem' }}>
+                  {alert.note}
+                </div>
+              )}
             </div>
             <button
               type="button"

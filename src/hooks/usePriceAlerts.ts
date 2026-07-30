@@ -42,6 +42,7 @@ type CreateAlertInput = {
   symbol: string
   targetPrice: number
   direction: PriceAlert['direction']
+  note?: string
 }
 
 export function usePriceAlerts(currentPrice: number | null, symbol: string) {
@@ -57,6 +58,7 @@ export function usePriceAlerts(currentPrice: number | null, symbol: string) {
       symbol: input.symbol,
       targetPrice: input.targetPrice,
       direction: input.direction,
+      note: input.note,
       triggered: false,
       createdAt: Date.now(),
     }
@@ -98,13 +100,13 @@ export function usePriceAlerts(currentPrice: number | null, symbol: string) {
 
         if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
           new Notification('Tradelite Price Alert', {
-            body: `${alert.symbol} is ${alert.direction} ${formatUsdPrice(alert.targetPrice)}`,
+            body: `${alert.symbol} is ${alert.direction} ${formatUsdPrice(alert.targetPrice)}${alert.note ? ` (${alert.note})` : ''}`,
           })
         }
 
         playAlertSound()
 
-        return { ...alert, triggered: true }
+        return { ...alert, triggered: true, triggeredAt: Date.now() }
       })
 
       return changed ? next : prev
