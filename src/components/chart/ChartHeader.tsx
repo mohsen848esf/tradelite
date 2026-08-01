@@ -15,6 +15,9 @@ type ChartHeaderProps = {
   onToggleEMA: () => void
   onToggleRSI?: () => void
   onToggleMACD?: () => void
+  drawMode?: boolean
+  onToggleDrawMode?: () => void
+  onClearLines?: () => void
   layoutMode: 'single' | 'split'
   onLayoutModeChange: (mode: 'single' | 'split') => void
   onExport: () => void
@@ -29,10 +32,13 @@ export function ChartHeader({
   showEMA,
   showRSI,
   showMACD,
+  drawMode,
   onToggleSMA,
   onToggleEMA,
   onToggleRSI,
   onToggleMACD,
+  onToggleDrawMode,
+  onClearLines,
   layoutMode,
   onLayoutModeChange,
   onExport,
@@ -76,6 +82,25 @@ export function ChartHeader({
             >
               MACD
             </button>
+          )}
+          {onToggleDrawMode && (
+            <>
+              <span style={{ borderLeft: '1px solid #21262d', margin: '0 0.25rem' }} />
+              <button
+                type="button"
+                className={`chart-header__indicator-btn${drawMode ? ' chart-header__indicator-btn--draw-active' : ''}`}
+                onClick={onToggleDrawMode}
+              >
+                ✏️ Draw Line
+              </button>
+              <button
+                type="button"
+                className="chart-header__indicator-btn"
+                onClick={onClearLines}
+              >
+                🗑️ Clear Lines
+              </button>
+            </>
           )}
           <span style={{ borderLeft: '1px solid #21262d', margin: '0 0.25rem' }} />
           <button

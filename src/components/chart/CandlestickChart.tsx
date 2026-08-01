@@ -13,6 +13,7 @@ import { calculateSMA, calculateEMA } from '@/utils/indicators'
 import { calculateRSI } from '@/utils/rsi'
 import { calculateMACD } from '@/utils/macd'
 import { exportCandlestickDataToCsv } from '@/utils/exportCsv'
+import { TrendlineCanvas, type Trendline } from './TrendlineCanvas'
 import type { Kline } from '@/types/market'
 import './CandlestickChart.css'
 
@@ -28,6 +29,10 @@ type CandlestickChartProps = {
   showEMA: boolean
   showRSI?: boolean
   showMACD?: boolean
+  drawMode?: boolean
+  trendlines?: Trendline[]
+  onAddTrendline?: (line: Trendline) => void
+  onClearTrendlines?: () => void
   theme: 'dark' | 'light'
 }
 
@@ -43,7 +48,19 @@ function toChartCandle(kline: Kline) {
 
 export const CandlestickChart = forwardRef<CandlestickChartRef, CandlestickChartProps>(
   function CandlestickChart(
-    { symbol, interval, kline, showSMA, showEMA, showRSI, showMACD, theme },
+    {
+      symbol,
+      interval,
+      kline,
+      showSMA,
+      showEMA,
+      showRSI,
+      showMACD,
+      drawMode = false,
+      trendlines = [],
+      onAddTrendline,
+      theme,
+    },
     ref
   ) {
     const containerRef = useRef<HTMLDivElement>(null)
@@ -314,6 +331,11 @@ export const CandlestickChart = forwardRef<CandlestickChartRef, CandlestickChart
     return (
       <div className="candlestick-chart">
         <div ref={containerRef} className="candlestick-chart__canvas" />
+        <TrendlineCanvas
+          active={drawMode}
+          lines={trendlines}
+          onAddLine={(line) => onAddTrendline?.(line)}
+        />
         {loading && <div className="candlestick-chart__overlay">Loading chart…</div>}
         {error && <div className="candlestick-chart__overlay candlestick-chart__overlay--error">{error}</div>}
       </div>

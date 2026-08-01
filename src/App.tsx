@@ -8,6 +8,7 @@ import { PriceAlertForm } from '@/components/alerts/PriceAlertForm'
 import { PriceAlertList } from '@/components/alerts/PriceAlertList'
 import { ChartHeader } from '@/components/chart/ChartHeader'
 import { CandlestickChart, type CandlestickChartRef } from '@/components/chart/CandlestickChart'
+import { type Trendline } from '@/components/chart/TrendlineCanvas'
 import { IntervalSelector } from '@/components/market/IntervalSelector'
 import { StreamErrorBanner } from '@/components/market/StreamErrorBanner'
 import { SymbolSelector } from '@/components/market/SymbolSelector'
@@ -32,6 +33,8 @@ function App() {
   const [showEMA, setShowEMA] = useState(false)
   const [showRSI, setShowRSI] = useState(false)
   const [showMACD, setShowMACD] = useState(false)
+  const [drawMode, setDrawMode] = useState(false)
+  const [trendlines, setTrendlines] = useState<Trendline[]>([])
   const { theme, toggleTheme } = useTheme()
 
   // Multi-chart states
@@ -211,10 +214,13 @@ function App() {
                 showEMA={showEMA}
                 showRSI={showRSI}
                 showMACD={showMACD}
+                drawMode={drawMode}
                 onToggleSMA={() => setShowSMA((prev) => !prev)}
                 onToggleEMA={() => setShowEMA((prev) => !prev)}
                 onToggleRSI={() => setShowRSI((prev) => !prev)}
                 onToggleMACD={() => setShowMACD((prev) => !prev)}
+                onToggleDrawMode={() => setDrawMode((prev) => !prev)}
+                onClearLines={() => setTrendlines([])}
                 layoutMode={layoutMode}
                 onLayoutModeChange={setLayoutMode}
                 onExport={() => chartRef1.current?.exportCsv()}
@@ -228,6 +234,10 @@ function App() {
                 showEMA={showEMA}
                 showRSI={showRSI}
                 showMACD={showMACD}
+                drawMode={drawMode}
+                trendlines={trendlines}
+                onAddTrendline={(line) => setTrendlines((prev) => [...prev, line])}
+                onClearTrendlines={() => setTrendlines([])}
                 theme={theme}
               />
               {error && <StreamErrorBanner message={error} onRetry={reconnect} />}
@@ -247,10 +257,13 @@ function App() {
                   showEMA={showEMA}
                   showRSI={showRSI}
                   showMACD={showMACD}
+                  drawMode={drawMode}
                   onToggleSMA={() => setShowSMA((prev) => !prev)}
                   onToggleEMA={() => setShowEMA((prev) => !prev)}
                   onToggleRSI={() => setShowRSI((prev) => !prev)}
                   onToggleMACD={() => setShowMACD((prev) => !prev)}
+                  onToggleDrawMode={() => setDrawMode((prev) => !prev)}
+                  onClearLines={() => setTrendlines([])}
                   layoutMode={layoutMode}
                   onLayoutModeChange={setLayoutMode}
                   onExport={() => chartRef1.current?.exportCsv()}
@@ -264,6 +277,10 @@ function App() {
                   showEMA={showEMA}
                   showRSI={showRSI}
                   showMACD={showMACD}
+                  drawMode={drawMode}
+                  trendlines={trendlines}
+                  onAddTrendline={(line) => setTrendlines((prev) => [...prev, line])}
+                  onClearTrendlines={() => setTrendlines([])}
                   theme={theme}
                 />
                 {error && <StreamErrorBanner message={error} onRetry={reconnect} />}
@@ -281,10 +298,13 @@ function App() {
                   showEMA={showEMA}
                   showRSI={showRSI}
                   showMACD={showMACD}
+                  drawMode={drawMode}
                   onToggleSMA={() => setShowSMA((prev) => !prev)}
                   onToggleEMA={() => setShowEMA((prev) => !prev)}
                   onToggleRSI={() => setShowRSI((prev) => !prev)}
                   onToggleMACD={() => setShowMACD((prev) => !prev)}
+                  onToggleDrawMode={() => setDrawMode((prev) => !prev)}
+                  onClearLines={() => setTrendlines([])}
                   layoutMode={layoutMode}
                   onLayoutModeChange={setLayoutMode}
                   onExport={() => chartRef2.current?.exportCsv()}
@@ -298,6 +318,10 @@ function App() {
                   showEMA={showEMA}
                   showRSI={showRSI}
                   showMACD={showMACD}
+                  drawMode={drawMode}
+                  trendlines={trendlines}
+                  onAddTrendline={(line) => setTrendlines((prev) => [...prev, line])}
+                  onClearTrendlines={() => setTrendlines([])}
                   theme={theme}
                 />
                 {error2 && <StreamErrorBanner message={error2} onRetry={reconnect2} />}
