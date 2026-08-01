@@ -30,6 +30,8 @@ function App() {
   const [activeTab, setActiveTab] = useState<'orderbook' | 'trades'>('orderbook')
   const [showSMA, setShowSMA] = useState(false)
   const [showEMA, setShowEMA] = useState(false)
+  const [showRSI, setShowRSI] = useState(false)
+  const [showMACD, setShowMACD] = useState(false)
   const { theme, toggleTheme } = useTheme()
 
   // Multi-chart states
@@ -207,8 +209,12 @@ function App() {
                 lowPrice={ticker?.lowPrice}
                 showSMA={showSMA}
                 showEMA={showEMA}
+                showRSI={showRSI}
+                showMACD={showMACD}
                 onToggleSMA={() => setShowSMA((prev) => !prev)}
                 onToggleEMA={() => setShowEMA((prev) => !prev)}
+                onToggleRSI={() => setShowRSI((prev) => !prev)}
+                onToggleMACD={() => setShowMACD((prev) => !prev)}
                 layoutMode={layoutMode}
                 onLayoutModeChange={setLayoutMode}
                 onExport={() => chartRef1.current?.exportCsv()}
@@ -220,6 +226,8 @@ function App() {
                 kline={kline}
                 showSMA={showSMA}
                 showEMA={showEMA}
+                showRSI={showRSI}
+                showMACD={showMACD}
                 theme={theme}
               />
               {error && <StreamErrorBanner message={error} onRetry={reconnect} />}
@@ -237,8 +245,12 @@ function App() {
                   lowPrice={ticker?.lowPrice}
                   showSMA={showSMA}
                   showEMA={showEMA}
+                  showRSI={showRSI}
+                  showMACD={showMACD}
                   onToggleSMA={() => setShowSMA((prev) => !prev)}
                   onToggleEMA={() => setShowEMA((prev) => !prev)}
+                  onToggleRSI={() => setShowRSI((prev) => !prev)}
+                  onToggleMACD={() => setShowMACD((prev) => !prev)}
                   layoutMode={layoutMode}
                   onLayoutModeChange={setLayoutMode}
                   onExport={() => chartRef1.current?.exportCsv()}
@@ -250,6 +262,8 @@ function App() {
                   kline={kline}
                   showSMA={showSMA}
                   showEMA={showEMA}
+                  showRSI={showRSI}
+                  showMACD={showMACD}
                   theme={theme}
                 />
                 {error && <StreamErrorBanner message={error} onRetry={reconnect} />}
@@ -265,8 +279,12 @@ function App() {
                   lowPrice={ticker2?.lowPrice}
                   showSMA={showSMA}
                   showEMA={showEMA}
+                  showRSI={showRSI}
+                  showMACD={showMACD}
                   onToggleSMA={() => setShowSMA((prev) => !prev)}
                   onToggleEMA={() => setShowEMA((prev) => !prev)}
+                  onToggleRSI={() => setShowRSI((prev) => !prev)}
+                  onToggleMACD={() => setShowMACD((prev) => !prev)}
                   layoutMode={layoutMode}
                   onLayoutModeChange={setLayoutMode}
                   onExport={() => chartRef2.current?.exportCsv()}
@@ -278,6 +296,8 @@ function App() {
                   kline={kline2}
                   showSMA={showSMA}
                   showEMA={showEMA}
+                  showRSI={showRSI}
+                  showMACD={showMACD}
                   theme={theme}
                 />
                 {error2 && <StreamErrorBanner message={error2} onRetry={reconnect2} />}

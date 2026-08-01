@@ -9,8 +9,12 @@ type ChartHeaderProps = {
   lowPrice?: number
   showSMA: boolean
   showEMA: boolean
+  showRSI?: boolean
+  showMACD?: boolean
   onToggleSMA: () => void
   onToggleEMA: () => void
+  onToggleRSI?: () => void
+  onToggleMACD?: () => void
   layoutMode: 'single' | 'split'
   onLayoutModeChange: (mode: 'single' | 'split') => void
   onExport: () => void
@@ -23,8 +27,12 @@ export function ChartHeader({
   lowPrice,
   showSMA,
   showEMA,
+  showRSI,
+  showMACD,
   onToggleSMA,
   onToggleEMA,
+  onToggleRSI,
+  onToggleMACD,
   layoutMode,
   onLayoutModeChange,
   onExport,
@@ -51,6 +59,24 @@ export function ChartHeader({
           >
             EMA (20)
           </button>
+          {onToggleRSI && (
+            <button
+              type="button"
+              className={`chart-header__indicator-btn${showRSI ? ' chart-header__indicator-btn--rsi-active' : ''}`}
+              onClick={onToggleRSI}
+            >
+              RSI (14)
+            </button>
+          )}
+          {onToggleMACD && (
+            <button
+              type="button"
+              className={`chart-header__indicator-btn${showMACD ? ' chart-header__indicator-btn--macd-active' : ''}`}
+              onClick={onToggleMACD}
+            >
+              MACD
+            </button>
+          )}
           <span style={{ borderLeft: '1px solid #21262d', margin: '0 0.25rem' }} />
           <button
             type="button"
