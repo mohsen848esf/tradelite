@@ -19,6 +19,8 @@ export type PriceAlert = {
   direction: 'above' | 'below'
   triggered: boolean
   createdAt: number
+  note?: string
+  triggeredAt?: number
 }
 
 export type ConnectionStatus = 'connecting' | 'connected' | 'disconnected' | 'error'
