@@ -1,5 +1,7 @@
 import { getSymbolLabel } from '@/utils/symbolLabel'
 import { formatUsdPrice } from '@/utils/formatPrice'
+import { TimeframePresets } from '@/components/market/TimeframePresets'
+import type { KlineInterval } from '@/constants/market'
 import './ChartHeader.css'
 
 type ChartHeaderProps = {
@@ -18,6 +20,7 @@ type ChartHeaderProps = {
   drawMode?: boolean
   onToggleDrawMode?: () => void
   onClearLines?: () => void
+  onIntervalChange?: (interval: KlineInterval) => void
   layoutMode: 'single' | 'split'
   onLayoutModeChange: (mode: 'single' | 'split') => void
   onExport: () => void
@@ -39,6 +42,7 @@ export function ChartHeader({
   onToggleMACD,
   onToggleDrawMode,
   onClearLines,
+  onIntervalChange,
   layoutMode,
   onLayoutModeChange,
   onExport,
@@ -49,7 +53,11 @@ export function ChartHeader({
     <div className="chart-header">
       <div className="chart-header__info">
         <h2 className="chart-header__title">{label}</h2>
-        <span className="chart-header__interval">{interval} candlesticks</span>
+        {onIntervalChange ? (
+          <TimeframePresets currentInterval={interval as KlineInterval} onSelectInterval={onIntervalChange} />
+        ) : (
+          <span className="chart-header__interval">{interval} candlesticks</span>
+        )}
         <div className="chart-header__controls">
           <button
             type="button"

@@ -221,6 +221,7 @@ function App() {
                 onToggleMACD={() => setShowMACD((prev) => !prev)}
                 onToggleDrawMode={() => setDrawMode((prev) => !prev)}
                 onClearLines={() => setTrendlines([])}
+                onIntervalChange={setInterval}
                 layoutMode={layoutMode}
                 onLayoutModeChange={setLayoutMode}
                 onExport={() => chartRef1.current?.exportCsv()}
@@ -237,7 +238,6 @@ function App() {
                 drawMode={drawMode}
                 trendlines={trendlines}
                 onAddTrendline={(line) => setTrendlines((prev) => [...prev, line])}
-                onClearTrendlines={() => setTrendlines([])}
                 theme={theme}
               />
               {error && <StreamErrorBanner message={error} onRetry={reconnect} />}
@@ -264,6 +264,7 @@ function App() {
                   onToggleMACD={() => setShowMACD((prev) => !prev)}
                   onToggleDrawMode={() => setDrawMode((prev) => !prev)}
                   onClearLines={() => setTrendlines([])}
+                  onIntervalChange={setInterval}
                   layoutMode={layoutMode}
                   onLayoutModeChange={setLayoutMode}
                   onExport={() => chartRef1.current?.exportCsv()}
@@ -280,7 +281,6 @@ function App() {
                   drawMode={drawMode}
                   trendlines={trendlines}
                   onAddTrendline={(line) => setTrendlines((prev) => [...prev, line])}
-                  onClearTrendlines={() => setTrendlines([])}
                   theme={theme}
                 />
                 {error && <StreamErrorBanner message={error} onRetry={reconnect} />}
@@ -305,6 +305,7 @@ function App() {
                   onToggleMACD={() => setShowMACD((prev) => !prev)}
                   onToggleDrawMode={() => setDrawMode((prev) => !prev)}
                   onClearLines={() => setTrendlines([])}
+                  onIntervalChange={setInterval2}
                   layoutMode={layoutMode}
                   onLayoutModeChange={setLayoutMode}
                   onExport={() => chartRef2.current?.exportCsv()}
