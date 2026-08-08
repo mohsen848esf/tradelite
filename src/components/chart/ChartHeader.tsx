@@ -24,6 +24,7 @@ type ChartHeaderProps = {
   layoutMode: 'single' | 'split'
   onLayoutModeChange: (mode: 'single' | 'split') => void
   onExport: () => void
+  onSnapshot?: () => void
 }
 
 export function ChartHeader({
@@ -46,6 +47,7 @@ export function ChartHeader({
   layoutMode,
   onLayoutModeChange,
   onExport,
+  onSnapshot,
 }: ChartHeaderProps) {
   const label = getSymbolLabel(symbol)
 
@@ -133,6 +135,15 @@ export function ChartHeader({
           >
             Export CSV
           </button>
+          {onSnapshot && (
+            <button
+              type="button"
+              className="chart-header__indicator-btn"
+              onClick={onSnapshot}
+            >
+              📷 Snapshot
+            </button>
+          )}
         </div>
       </div>
       {(highPrice !== undefined || lowPrice !== undefined) && (

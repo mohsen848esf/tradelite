@@ -13,12 +13,14 @@ import { calculateSMA, calculateEMA } from '@/utils/indicators'
 import { calculateRSI } from '@/utils/rsi'
 import { calculateMACD } from '@/utils/macd'
 import { exportCandlestickDataToCsv } from '@/utils/exportCsv'
+import { exportChartSnapshot } from '@/utils/exportSnapshot'
 import { TrendlineCanvas, type Trendline } from './TrendlineCanvas'
 import type { Kline } from '@/types/market'
 import './CandlestickChart.css'
 
 export type CandlestickChartRef = {
   exportCsv: () => void
+  exportSnapshot: () => void
 }
 
 type CandlestickChartProps = {
@@ -77,6 +79,9 @@ export const CandlestickChart = forwardRef<CandlestickChartRef, CandlestickChart
     useImperativeHandle(ref, () => ({
       exportCsv() {
         exportCandlestickDataToCsv(symbol, interval, historyRef.current)
+      },
+      exportSnapshot() {
+        exportChartSnapshot(chartRef.current, symbol)
       },
     }))
 
