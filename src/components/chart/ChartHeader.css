@@ -89,3 +89,21 @@
   border-color: #8b949e;
 }
 
+.chart-header__indicator-btn--rsi-active {
+  color: #ffffff;
+  background: #a371f7;
+  border-color: #a371f7;
+}
+
+.chart-header__indicator-btn--macd-active {
+  color: #ffffff;
+  background: #f0883e;
+  border-color: #f0883e;
+}
+
+.chart-header__indicator-btn--draw-active {
+  color: #0d1117;
+  background: #238636;
+  border-color: #238636;
+}
+

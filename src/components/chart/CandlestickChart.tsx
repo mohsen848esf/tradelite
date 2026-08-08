@@ -10,12 +10,17 @@ import {
 } from 'lightweight-charts'
 import { fetchHistoricalKlines } from '@/services/binance'
 import { calculateSMA, calculateEMA } from '@/utils/indicators'
+import { calculateRSI } from '@/utils/rsi'
+import { calculateMACD } from '@/utils/macd'
 import { exportCandlestickDataToCsv } from '@/utils/exportCsv'
+import { exportChartSnapshot } from '@/utils/exportSnapshot'
+import { TrendlineCanvas, type Trendline } from './TrendlineCanvas'
 import type { Kline } from '@/types/market'
 import './CandlestickChart.css'
 
 export type CandlestickChartRef = {
   exportCsv: () => void
+  exportSnapshot: () => void
 }
 
 type CandlestickChartProps = {
@@ -24,6 +29,12 @@ type CandlestickChartProps = {
   kline: Kline | null
   showSMA: boolean
   showEMA: boolean
+  showRSI?: boolean
+  showMACD?: boolean
+  drawMode?: boolean
+  trendlines?: Trendline[]
+  onAddTrendline?: (line: Trendline) => void
+  onClearTrendlines?: () => void
   theme: 'dark' | 'light'
 }
 
@@ -39,7 +50,19 @@ function toChartCandle(kline: Kline) {
 
 export const CandlestickChart = forwardRef<CandlestickChartRef, CandlestickChartProps>(
   function CandlestickChart(
-    { symbol, interval, kline, showSMA, showEMA, theme },
+    {
+      symbol,
+      interval,
+      kline,
+      showSMA,
+      showEMA,
+      showRSI,
+      showMACD,
+      drawMode = false,
+      trendlines = [],
+      onAddTrendline,
+      theme,
+    },
     ref
   ) {
     const containerRef = useRef<HTMLDivElement>(null)
@@ -47,6 +70,8 @@ export const CandlestickChart = forwardRef<CandlestickChartRef, CandlestickChart
     const seriesRef = useRef<ISeriesApi<'Candlestick'> | null>(null)
     const smaSeriesRef = useRef<ISeriesApi<'Line'> | null>(null)
     const emaSeriesRef = useRef<ISeriesApi<'Line'> | null>(null)
+    const rsiSeriesRef = useRef<ISeriesApi<'Line'> | null>(null)
+    const macdSeriesRef = useRef<ISeriesApi<'Line'> | null>(null)
     const historyRef = useRef<Kline[]>([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
@@ -54,6 +79,9 @@ export const CandlestickChart = forwardRef<CandlestickChartRef, CandlestickChart
     useImperativeHandle(ref, () => ({
       exportCsv() {
         exportCandlestickDataToCsv(symbol, interval, historyRef.current)
+      },
+      exportSnapshot() {
+        exportChartSnapshot(chartRef.current, symbol)
       },
     }))
 
@@ -107,10 +135,26 @@ export const CandlestickChart = forwardRef<CandlestickChartRef, CandlestickChart
         priceLineVisible: false,
       })
 
+      const rsiSeries = chart.addSeries(LineSeries, {
+        color: '#a371f7',
+        lineWidth: 2,
+        lastValueVisible: false,
+        priceLineVisible: false,
+      })
+
+      const macdSeries = chart.addSeries(LineSeries, {
+        color: '#f0883e',
+        lineWidth: 2,
+        lastValueVisible: false,
+        priceLineVisible: false,
+      })
+
       chartRef.current = chart
       seriesRef.current = series
       smaSeriesRef.current = smaSeries
       emaSeriesRef.current = emaSeries
+      rsiSeriesRef.current = rsiSeries
+      macdSeriesRef.current = macdSeries
 
       const resizeObserver = new ResizeObserver((entries) => {
         const entry = entries[0]
@@ -131,6 +175,8 @@ export const CandlestickChart = forwardRef<CandlestickChartRef, CandlestickChart
         seriesRef.current = null
         smaSeriesRef.current = null
         emaSeriesRef.current = null
+        rsiSeriesRef.current = null
+        macdSeriesRef.current = null
       }
     }, [])
 
@@ -171,6 +217,20 @@ export const CandlestickChart = forwardRef<CandlestickChartRef, CandlestickChart
             }))
             emaSeriesRef.current.setData(emaData)
           }
+          if (rsiSeriesRef.current) {
+            const rsiData = calculateRSI(history, 14).map((p) => ({
+              time: p.time as UTCTimestamp,
+              value: p.value,
+            }))
+            rsiSeriesRef.current.setData(rsiData)
+          }
+          if (macdSeriesRef.current) {
+            const macdData = calculateMACD(history).map((p) => ({
+              time: p.time as UTCTimestamp,
+              value: p.macd,
+            }))
+            macdSeriesRef.current.setData(macdData)
+          }
 
           chartRef.current?.timeScale().fitContent()
         } catch (loadError) {
@@ -199,6 +259,14 @@ export const CandlestickChart = forwardRef<CandlestickChartRef, CandlestickChart
     useEffect(() => {
       emaSeriesRef.current?.applyOptions({ visible: showEMA })
     }, [showEMA])
+
+    useEffect(() => {
+      rsiSeriesRef.current?.applyOptions({ visible: Boolean(showRSI) })
+    }, [showRSI])
+
+    useEffect(() => {
+      macdSeriesRef.current?.applyOptions({ visible: Boolean(showMACD) })
+    }, [showMACD])
 
     // Apply theme changes dynamically to the chart
     useEffect(() => {
@@ -268,6 +336,11 @@ export const CandlestickChart = forwardRef<CandlestickChartRef, CandlestickChart
     return (
       <div className="candlestick-chart">
         <div ref={containerRef} className="candlestick-chart__canvas" />
+        <TrendlineCanvas
+          active={drawMode}
+          lines={trendlines}
+          onAddLine={(line) => onAddTrendline?.(line)}
+        />
         {loading && <div className="candlestick-chart__overlay">Loading chart…</div>}
         {error && <div className="candlestick-chart__overlay candlestick-chart__overlay--error">{error}</div>}
       </div>

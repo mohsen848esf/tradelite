@@ -1,5 +1,7 @@
 import { getSymbolLabel } from '@/utils/symbolLabel'
 import { formatUsdPrice } from '@/utils/formatPrice'
+import { TimeframePresets } from '@/components/market/TimeframePresets'
+import type { KlineInterval } from '@/constants/market'
 import './ChartHeader.css'
 
 type ChartHeaderProps = {
@@ -9,11 +11,20 @@ type ChartHeaderProps = {
   lowPrice?: number
   showSMA: boolean
   showEMA: boolean
+  showRSI?: boolean
+  showMACD?: boolean
   onToggleSMA: () => void
   onToggleEMA: () => void
+  onToggleRSI?: () => void
+  onToggleMACD?: () => void
+  drawMode?: boolean
+  onToggleDrawMode?: () => void
+  onClearLines?: () => void
+  onIntervalChange?: (interval: KlineInterval) => void
   layoutMode: 'single' | 'split'
   onLayoutModeChange: (mode: 'single' | 'split') => void
   onExport: () => void
+  onSnapshot?: () => void
 }
 
 export function ChartHeader({
@@ -23,11 +34,20 @@ export function ChartHeader({
   lowPrice,
   showSMA,
   showEMA,
+  showRSI,
+  showMACD,
+  drawMode,
   onToggleSMA,
   onToggleEMA,
+  onToggleRSI,
+  onToggleMACD,
+  onToggleDrawMode,
+  onClearLines,
+  onIntervalChange,
   layoutMode,
   onLayoutModeChange,
   onExport,
+  onSnapshot,
 }: ChartHeaderProps) {
   const label = getSymbolLabel(symbol)
 
@@ -35,7 +55,11 @@ export function ChartHeader({
     <div className="chart-header">
       <div className="chart-header__info">
         <h2 className="chart-header__title">{label}</h2>
-        <span className="chart-header__interval">{interval} candlesticks</span>
+        {onIntervalChange ? (
+          <TimeframePresets currentInterval={interval as KlineInterval} onSelectInterval={onIntervalChange} />
+        ) : (
+          <span className="chart-header__interval">{interval} candlesticks</span>
+        )}
         <div className="chart-header__controls">
           <button
             type="button"
@@ -51,6 +75,43 @@ export function ChartHeader({
           >
             EMA (20)
           </button>
+          {onToggleRSI && (
+            <button
+              type="button"
+              className={`chart-header__indicator-btn${showRSI ? ' chart-header__indicator-btn--rsi-active' : ''}`}
+              onClick={onToggleRSI}
+            >
+              RSI (14)
+            </button>
+          )}
+          {onToggleMACD && (
+            <button
+              type="button"
+              className={`chart-header__indicator-btn${showMACD ? ' chart-header__indicator-btn--macd-active' : ''}`}
+              onClick={onToggleMACD}
+            >
+              MACD
+            </button>
+          )}
+          {onToggleDrawMode && (
+            <>
+              <span style={{ borderLeft: '1px solid #21262d', margin: '0 0.25rem' }} />
+              <button
+                type="button"
+                className={`chart-header__indicator-btn${drawMode ? ' chart-header__indicator-btn--draw-active' : ''}`}
+                onClick={onToggleDrawMode}
+              >
+                ✏️ Draw Line
+              </button>
+              <button
+                type="button"
+                className="chart-header__indicator-btn"
+                onClick={onClearLines}
+              >
+                🗑️ Clear Lines
+              </button>
+            </>
+          )}
           <span style={{ borderLeft: '1px solid #21262d', margin: '0 0.25rem' }} />
           <button
             type="button"
@@ -74,6 +135,15 @@ export function ChartHeader({
           >
             Export CSV
           </button>
+          {onSnapshot && (
+            <button
+              type="button"
+              className="chart-header__indicator-btn"
+              onClick={onSnapshot}
+            >
+              📷 Snapshot
+            </button>
+          )}
         </div>
       </div>
       {(highPrice !== undefined || lowPrice !== undefined) && (
